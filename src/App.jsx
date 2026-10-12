@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import GovukHeader from './components/GovukHeader';
 // TODO: Mount PhaseBanner below GovukHeader — import PhaseBanner from './components/PhaseBanner';
@@ -13,7 +14,13 @@ import ResultPage from './pages/ResultPage';
 import AccessibilityStatementPage from './pages/AccessibilityStatementPage';
 
 function App() {
-  // TODO: Add form state here (useState) to hold all question answers
+  const [answers, setAnswers] = useState({
+    propertyType: '',
+    ownership: '',
+    incomeBand: '',
+    insulation: '',
+    heating: '',
+  });
   // TODO: Pass state and setter to each page component via props
 
   return (
