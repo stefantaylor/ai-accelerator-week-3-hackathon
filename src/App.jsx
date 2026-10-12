@@ -30,6 +30,10 @@ function App() {
     setAnswersState(updated);
   };
 
+  const handleReset = () => {
+    setAnswersState({ ...emptyAnswers });
+  };
+
   return (
     <>
       <GovukHeader />
@@ -46,7 +50,7 @@ function App() {
             <Route path="/insulation" element={<InsulationPage answers={answers} onAnswer={handleAnswer} />} />
             <Route path="/heating" element={<HeatingPage answers={answers} onAnswer={handleAnswer} />} />
             <Route path="/check-answers" element={<CheckAnswersPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/result" element={<ResultPage answers={answers} onAnswer={handleAnswer} />} />
+            <Route path="/result" element={<ResultPage answers={answers} onAnswer={handleAnswer} onReset={handleReset} />} />
             <Route path="/accessibility-statement" element={<AccessibilityStatementPage />} />
           </Routes>
         </main>

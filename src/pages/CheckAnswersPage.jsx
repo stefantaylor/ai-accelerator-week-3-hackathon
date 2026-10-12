@@ -37,11 +37,7 @@ function CheckAnswersPage({ answers, onAnswer }) {
             ) : answers.priorGrants.includes('none') ? (
               <span>{getLabel('priorGrants', 'none')}</span>
             ) : (
-              <ul className="govuk-list">
-                {answers.priorGrants.map(grant => (
-                  <li key={grant}>{getLabel('priorGrants', grant)}</li>
-                ))}
-              </ul>
+              <span>{answers.priorGrants.map(grant => getLabel('priorGrants', grant)).join(', ')}</span>
             )}
           </dd>
           <dd className="govuk-summary-list__actions">
@@ -106,11 +102,7 @@ function CheckAnswersPage({ answers, onAnswer }) {
             {answers.uninsulatedParts.length === 0 ? (
               <span>Not answered</span>
             ) : (
-              <ul className="govuk-list">
-                {answers.uninsulatedParts.map(part => (
-                  <li key={part}>{getLabel('uninsulatedParts', part)}</li>
-                ))}
-              </ul>
+              <span>{answers.uninsulatedParts.map(part => getLabel('uninsulatedParts', part)).join(', ')}</span>
             )}
           </dd>
           <dd className="govuk-summary-list__actions">
