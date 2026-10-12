@@ -1,8 +1,13 @@
-// TODO: Import useNavigate from react-router-dom
-// TODO: Import GovukButton
+import { useNavigate } from 'react-router-dom';
+import GovukButton from '../components/GovukButton';
 
-function StartPage() {
-  // TODO: Add navigation to /property-type on button click
+function StartPage({ answers, onAnswer }) {
+  const navigate = useNavigate();
+  document.title = 'Check if you can get a Green Home Grant - GOV.UK';
+
+  const handleStart = () => {
+    navigate('/prior-grants');
+  };
 
   return (
     <>
@@ -10,9 +15,11 @@ function StartPage() {
         Check if you can get a Green Home Grant
       </h1>
       <p className="govuk-body-l">
-        {/* TODO: Add a description of the service */}
+        Use this tool to check whether you might be eligible for a Green Home Grant to help with the cost of insulation or a heat pump.
       </p>
-      {/* TODO: Add a "Start now" button using GovukButton with variant="start" */}
+      <GovukButton variant="start" onClick={handleStart}>
+        Start now
+      </GovukButton>
     </>
   );
 }

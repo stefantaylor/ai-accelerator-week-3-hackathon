@@ -1,16 +1,62 @@
-// TODO: Import useNavigate from react-router-dom
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CheckboxGroup from '../components/CheckboxGroup';
+import ErrorSummary from '../components/ErrorSummary';
+import GovukButton from '../components/GovukButton';
+import { isAnswered } from '../state/answers.js';
+import { getLabel } from '../content/labels.js';
+import { nextRoute, backRoute } from '../flow/journey.js';
 
-function InsulationPage() {
-  // TODO: Read current value from form state
-  // TODO: Add validation and error handling
-  // TODO: On "Continue", save answer and navigate to /heating
+function InsulationPage({ answers, onAnswer }) {
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState([]);
+
+  document.title = `${errors.length ? 'Error: ' : ''}Which parts of your property are not insulated? - Check if you can get a Green Home Grant - GOV.UK`;
+
+  const handleContinue = () => {
+    if (!isAnswered('uninsulatedParts', answers.uninsulatedParts)) {
+      setErrors([{ fieldId: 'uninsulatedParts', message: 'Select which parts of your property are not insulated, or select \'All parts are insulated\' or \'I\'m not sure\'' }]);
+      return;
+    }
+
+    setErrors([]);
+    onAnswer('uninsulatedParts', answers.uninsulatedParts);
+    navigate(nextRoute('/insulation', answers));
+  };
+
+  const handleBack = () => {
+    navigate(backRoute('/insulation', answers));
+  };
+
+  const options = [
+    { value: 'loft', label: getLabel('uninsulatedParts', 'loft') },
+    { value: 'walls', label: getLabel('uninsulatedParts', 'walls') },
+    { value: 'floor', label: getLabel('uninsulatedParts', 'floor') },
+    { value: 'allInsulated', label: getLabel('uninsulatedParts', 'allInsulated') },
+    { value: 'notSure', label: getLabel('uninsulatedParts', 'notSure') },
+  ];
 
   return (
     <>
-      <a href="/income" className="govuk-back-link">Back</a>
-      <h1 className="govuk-heading-l">Does your property have wall or loft insulation?</h1>
-      {/* TODO: Add radio buttons for: Yes - both wall and loft, Yes - wall only, Yes - loft only, No insulation, I do not know */}
-      {/* TODO: Add a Continue button */}
+      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
+        Back
+      </a>
+
+      <ErrorSummary errors={errors} />
+
+      <CheckboxGroup
+        name="uninsulatedParts"
+        legend="Which parts of your property are not insulated?"
+        hint="Select all that apply"
+        options={options}
+        value={answers.uninsulatedParts}
+        onChange={(values) => onAnswer('uninsulatedParts', values)}
+        error={errors.find(e => e.fieldId === 'uninsulatedParts')?.message}
+        exclusive={['allInsulated', 'notSure']}
+        dividerBefore={[3]}
+      />
+
+      <GovukButton onClick={handleContinue}>Continue</GovukButton>
     </>
   );
 }

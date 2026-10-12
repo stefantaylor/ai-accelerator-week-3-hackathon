@@ -11,12 +11,16 @@ export default defineConfig({
     host: '0.0.0.0',
     port: PORT,
     strictPort: true,
-    allowedHosts: ['.labs.decoded.com'],
+    allowedHosts: ['*.labs.decoded.com'],
     hmr: {
       protocol: 'wss',
       host: HOSTNAME,
 
       clientPort: 443,
     },
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/__tests__/setup.js'],
   },
 });
