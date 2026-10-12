@@ -90,9 +90,10 @@ describe('answers.js', () => {
         expect(updated.uninsulatedParts).toEqual([]);
       });
 
-      it('ignores "notSure" with other values', () => {
+      it('allows "notSure" mixed with specific parts (Q5a)', () => {
+        // Q5a: notSure can be combined with specific parts
         const updated = setAnswer(emptyAnswers, 'uninsulatedParts', ['notSure', 'loft']);
-        expect(updated.uninsulatedParts).toEqual([]);
+        expect(updated.uninsulatedParts).toEqual(['notSure', 'loft']);
       });
 
       it('allows loft/walls/floor in any combination', () => {

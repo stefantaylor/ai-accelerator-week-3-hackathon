@@ -35,7 +35,17 @@ function ResultPage({ answers, onAnswer }) {
       {result.insulation.eligible ? (
         <>
           <p className="govuk-body">You may be eligible.</p>
-          {result.insulation.needsAssessment ? (
+          {result.insulation.needsAssessment && result.insulation.coveredParts?.length > 0 ? (
+            <>
+              <p className="govuk-body">We could cover insulation for these parts:</p>
+              <ul className="govuk-list govuk-list--bullet">
+                {result.insulation.coveredParts.map(part => (
+                  <li key={part}>{getLabel('uninsulatedParts', part)}</li>
+                ))}
+              </ul>
+              <p className="govuk-body">An assessor will check the other parts of your property.</p>
+            </>
+          ) : result.insulation.needsAssessment ? (
             <p className="govuk-body">An assessor will check which parts of your property need insulating.</p>
           ) : (
             <>

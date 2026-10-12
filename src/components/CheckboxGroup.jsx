@@ -20,9 +20,14 @@ export default function CheckboxGroup({
       // Check
       if (exclusive && exclusive.includes(optionValue)) {
         // Exclusive option ticked - clear all others
-        newValue = [optionValue];
-      } else if (value.some(v => exclusive && exclusive.includes(v))) {
-        // Another exclusive option is ticked - replace it
+        // But if it's "notSure", only clear "allInsulated", not other parts
+        if (optionValue === 'notSure') {
+          newValue = value.filter(v => !exclusive.includes(v)).concat([optionValue]);
+        } else {
+          newValue = [optionValue];
+        }
+      } else if (value.some(v => exclusive && exclusive.includes(v) && v !== 'notSure')) {
+        // Another exclusive option (but not notSure) is ticked - replace it
         newValue = [optionValue];
       } else {
         // Normal checkbox - add to list

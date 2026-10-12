@@ -45,7 +45,19 @@ function getRequiredRoutes(answers) {
     required.push('/consent');
   }
 
-  required.push('/income', '/insulation', '/heating', '/check-answers', '/result');
+  required.push('/income');
+
+  // Q1: Skip insulation question if already received insulation grant
+  if (!priorGrants.includes('insulation')) {
+    required.push('/insulation');
+  }
+
+  // Q1: Skip heating question if already received heat pump grant
+  if (!priorGrants.includes('heatPump')) {
+    required.push('/heating');
+  }
+
+  required.push('/check-answers', '/result');
 
   return required;
 }

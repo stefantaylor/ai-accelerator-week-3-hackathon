@@ -47,9 +47,11 @@ function isExclusive(field, values) {
     return values.length === 1;
   }
   if (field === 'uninsulatedParts') {
-    if (values.includes('allInsulated') || values.includes('notSure')) {
+    // Q5a: allInsulated is exclusive, but notSure can be mixed with parts
+    if (values.includes('allInsulated')) {
       return values.length === 1;
     }
+    // notSure can be combined with specific parts
   }
   return true;
 }
@@ -72,14 +74,12 @@ export function setAnswer(answers, field, value) {
     if (field === 'priorGrants' && value.includes('none') && value.length === 1) {
       updated[field] = ['none'];
     } else if (field === 'uninsulatedParts') {
-      if (value.includes('allInsulated') && value.length === 1) {
-        updated[field] = ['allInsulated'];
-      } else if (value.includes('notSure') && value.length === 1) {
-        updated[field] = ['notSure'];
-      } else if (value.some(v => !['allInsulated', 'notSure'].includes(v))) {
-        // Removing exclusive options if present
-        updated[field] = value.filter(v => !['allInsulated', 'notSure'].includes(v));
+      // Q5a: allInsulated is exclusive, but notSure can be mixed with parts
+      if (value.includes('allInsulated')) {
+        // allInsulated cannot be combined with anything
+        updated[field] = value.includes('allInsulated') ? ['allInsulated'] : value;
       } else {
+        // notSure can be combined with specific parts
         updated[field] = value;
       }
     } else {

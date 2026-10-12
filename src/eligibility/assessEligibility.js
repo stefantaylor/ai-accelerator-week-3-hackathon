@@ -48,12 +48,19 @@ export function assessEligibility(answers) {
 
   // Add covered parts or assessment flag for eligible cases
   if (insulationEligible) {
-    if (uninsulatedParts.includes('notSure')) {
+    const hasNotSure = uninsulatedParts.includes('notSure');
+    const specificParts = uninsulatedParts.filter(p => PARTS_ORDER.includes(p));
+
+    if (hasNotSure && specificParts.length > 0) {
+      // Q5a: Mixed - has specific parts AND I'm not sure about others
+      insulationResult.needsAssessment = true;
+      insulationResult.coveredParts = specificParts.sort((a, b) => PARTS_ORDER.indexOf(a) - PARTS_ORDER.indexOf(b));
+    } else if (hasNotSure) {
+      // All parts are uncertain
       insulationResult.needsAssessment = true;
     } else {
-      insulationResult.coveredParts = uninsulatedParts
-        .filter(p => PARTS_ORDER.includes(p))
-        .sort((a, b) => PARTS_ORDER.indexOf(a) - PARTS_ORDER.indexOf(b));
+      // Only specific parts ticked
+      insulationResult.coveredParts = specificParts.sort((a, b) => PARTS_ORDER.indexOf(a) - PARTS_ORDER.indexOf(b));
     }
   }
 
