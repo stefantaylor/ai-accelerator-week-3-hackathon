@@ -1,6 +1,6 @@
 # Project context
 This is a GOV.UK service. All UI must follow the GOV.UK Design System.
-- Use the govuk-* classes defined in src/App.css. No custom colours.
+- Use GOV.UK Frontend (the govuk-frontend package) for all styles. Copy each component's HTML from the Design System website. Don't run its JavaScript. No custom classes, colours or CSS.
 - One question per page. Continue button, Back link.
 - Summary list is a <dl> with govuk-summary-list classes.
 - Error summary: role="alert", heading "There is a problem", links to each field in error
