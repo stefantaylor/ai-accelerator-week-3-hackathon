@@ -34,14 +34,14 @@
 | **What AI Generated** | Claude explained the problem: a home has cavity walls *or* solid walls, so listing both meant one always looked uninsulated, and the app would offer grants for parts that didn't need them or didn't exist (for example, a loft in a flat). Its first set of options was too technical and **we didn't understand it**, so we asked it to explain again. Its second attempt used a worked example (someone called Sam with insulated cavity walls being offered solid wall insulation) and offered three plain options: ask about parts of the house (A), A plus "I'm not sure" (B), or one page per part (C). Claude recommended B. |
 | **What You Changed + Why** | **Decision we made:** flip the question to "Which parts of your property are **not** insulated?" and use option B. This was our idea, not one of Claude's options, and it matches our intent of finding the uninsulated parts more directly. **What Claude added:** it agreed and pointed out that flipping the question also solves most of option C (people won't tick parts they don't have). It warned that GOV.UK guidance discourages negative questions, so it worded the last options as "All parts are insulated" and "I'm not sure" rather than "None of these". It made "I'm not sure" all-or-nothing and logged that as a new open question (Q5a) for us. It renamed the answer field to `uninsulatedParts`. It then updated `intent.md`, `spec.md` and `docs/eligibility-rules.md` to match. **Lesson:** ask Claude to explain options with a concrete example when they're unclear. |
 
-## Instance 5: XXX
+## Instance 5: Implementation Planning & Execution
 
 | Field | Detail |
 |-------|--------|
 | **Date** | 2026-10-12 |
-| **Task** |  |
-| **What AI Generated** |  |
-| **What You Changed + Why** | |
+| **Task** | Plan and implement the Green Home Grant eligibility checker prototype based on `intent.md`, `spec.md`, and `eligibility-rules.md` |
+| **What AI Generated** | **Planning phase:** Claude read intent.md and spec.md, then interviewed you with 3 multiple-choice questions to clarify priorities (full spec vs rules-only tradeoff, open questions handling, testing scope). You chose: implement everything, flag open questions for later, full Testing Library coverage. Claude then wrote a 600-line implementation plan (`write-a-plan-md-using-rippling-spindle.md`) covering: architecture (7 phases, 20 new/refactored modules), data models with V1-V4 validation rules, journey routing with all back-link logic, eligibility pseudocode, component design, testing strategy, and 8 flagged open questions. **Implementation phase:** Claude implemented phases 1-6: (1) Created 5 pure logic modules + 5 unit test files with 112 tests covering all eligibility rules, validation, routing, and storage. (2) Refactored App.jsx for sessionStorage seeding and auto-save. (3) Created 3 shared UI components (ErrorSummary, RadioGroup, CheckboxGroup with exclusive options). (4) Created 2 new pages (PriorGrantsPage, ConsentPage) and refactored 8 existing pages to match the spec. (5) Created CheckAnswersPage with Change links and ResultPage with eligibility outcomes. (6) Updated CSS with missing GOV.UK classes. Build: ✓ No errors. Tests: ✓ 112/112 passing. |
+| **What You Changed + Why** | **None in this instance.** You approved the plan (via ExitPlanMode) and let Claude execute it. This was the fullest AI-led implementation so far. **Observations:** The implementation followed the spec faithfully; no deviations or questions needed. The modular approach (pure logic → storage → UI components → pages) worked well and kept tests passing throughout. The code compiles and builds without errors despite being written incrementally. |
 
 
 
