@@ -13,6 +13,18 @@ The source of truth for the rules is `docs/eligibility-rules.md`. This document 
 - **Primary:** citizens self-checking before applying.
 - Not for caseworkers in this prototype.
 
+## GOV.UK Design System Patterns
+
+This prototype follows the [GOV.UK Design System](https://design-system.service.gov.uk/) and implements:
+
+- **Question pages pattern** – one question per page with clear heading, Back link, and Continue button
+- **Error validation pattern** – validation on continue click (not as-you-type), error summary at top with role="alert", field-level error messages
+- **Checkboxes with exclusive options** – "none" option positioned last with "or" divider, automatic clearing of other options
+- **Conditional reveals** – Consent question shown only when Ownership is Shared ownership or Rent
+- **Summary list pattern** – Check answers page with Change links including visually hidden context text
+- **Panel component** – Result page with green panel for eligible outcomes, grey for ineligible
+- **Form accessibility** – All inputs have associated labels, fieldsets with legends, proper heading hierarchy
+
 ## Question flow
 One question per page, each with a Back link and a Continue button, following the GOV.UK Design System (see `CLAUDE.md`).
 

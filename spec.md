@@ -61,16 +61,28 @@ There are no new runtime dependencies. In particular, no `govuk-frontend` packag
 3. The `test` / `test:watch` npm scripts already exist. Keep them.
 
 ### 2.3 UI constraints (from `CLAUDE.md` and the GOV.UK Design System)
+
+**Design System Patterns Implemented:**
+- **Question pages**: One question per page with Back link, legend heading (h1), and Continue button
+- **Error validation**: Validate on Continue click (not as-you-type), display error summary at page top with role="alert" and heading "There is a problem", preserve user input on redisplay
+- **Checkboxes with exclusive options**: Position "none" or "all insulated" options last with "or" divider; implement exclusive behavior so selecting one clears others
+- **Conditional reveals**: Show Consent question only when Ownership is Shared ownership or Rent; use appropriate wording per context
+- **Summary list**: Check answers page uses `<dl class="govuk-summary-list">` with Change links including visually hidden context text (e.g. "Change property type")
+- **Panel component**: Result page displays green panel for eligible outcomes ("You may be eligible…") and grey for ineligible ("You are not eligible…")
+- **Accessibility patterns**: All inputs have associated labels; radio/checkbox groups in fieldsets with legends; proper focus states; title prefix for error pages
+
+**CSS & Styling:**
 - Use only `govuk-*` classes defined in `src/App.css`, and no custom colours. Any new class must use only the existing `--govuk-*` colour variables.
-- **One question per page**, each with a **Back link** and a **Continue** button.
-- Check answers uses `<dl class="govuk-summary-list">`.
-- The error summary has `role="alert"`, the heading "There is a problem", and links to each field in error.
-- Every input has a `<label>`. Each radio or checkbox group is wrapped in `<fieldset class="govuk-fieldset">` with a `<legend>` that holds the question as the page `<h1>`.
-- Follow government accessibility guidance (WCAG 2.2 AA):
-  - each route sets a unique `document.title` in the format `<Page> - Check if you can get a Green Home Grant - GOV.UK`, prefixed `Error: ` while validation errors are shown;
-  - there is only one `<main>` element;
-  - all interaction works by keyboard;
-  - focus is visible.
+- Implement focus states on all interactive elements (outline: 3px solid var(--govuk-yellow), outline-offset: 0)
+- Add visited link styling (#4c2c92) for user navigation context
+- Ensure sufficient spacing and touch targets (minimum 40px for inputs)
+
+**Accessibility (WCAG 2.2 AA):**
+- Each route sets a unique `document.title` in the format `<Page> - Check if you can get a Green Home Grant - GOV.UK`, prefixed `Error: ` when validation errors are shown
+- There is only one `<main>` element
+- All interaction works by keyboard (Tab, Enter, Space)
+- Focus is visible and properly managed (moved to error summary on validation failure)
+- Error messages are action-oriented and guide users to solution
 
 **CSS additions required.** `App.css` is missing classes that this spec needs. Add these, with styles taken from the GOV.UK Frontend equivalents and using the existing colour variables only:
 - `govuk-checkboxes`, `__item`, `__input`, `__label`, `__divider` (needed for the prior grants and insulation pages);

@@ -65,6 +65,7 @@ export default function PriorGrantsPage({ answers, onAnswer }) {
         error={errors.find(e => e.fieldId === 'priorGrants')?.message}
         exclusive={['none']}
         dividerBefore={[2]}
+        dividerLabel="or"
       />
 
       <GovukButton onClick={handleContinue}>Continue</GovukButton>

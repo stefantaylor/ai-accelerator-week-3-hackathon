@@ -8,6 +8,7 @@ export default function CheckboxGroup({
   error,
   exclusive,
   dividerBefore,
+  dividerLabel = 'or',
 }) {
   const handleChange = (optionValue) => {
     let newValue;
@@ -43,7 +44,7 @@ export default function CheckboxGroup({
         {options.map((option, idx) => (
           <div key={option.value}>
             {dividerBefore && dividerBefore.includes(idx) && (
-              <div className="govuk-checkboxes__divider">or</div>
+              <div className="govuk-checkboxes__divider">{dividerLabel}</div>
             )}
             <div className="govuk-checkboxes__item">
               <input
