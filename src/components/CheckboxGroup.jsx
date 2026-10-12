@@ -39,13 +39,14 @@ export default function CheckboxGroup({
   };
 
   return (
-    <fieldset className={`govuk-fieldset ${error ? 'govuk-form-group--error' : ''}`}>
-      <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 className="govuk-fieldset__heading">{legend}</h1>
-      </legend>
-      {hint && <div className="govuk-hint">{hint}</div>}
-      {error && <p className="govuk-error-message"><span className="govuk-visually-hidden">Error:</span> {error}</p>}
-      <div className="govuk-checkboxes" data-module="govuk-checkboxes">
+    <div className={`govuk-form-group ${error ? 'govuk-form-group--error' : ''}`}>
+      <fieldset className="govuk-fieldset">
+        <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 className="govuk-fieldset__heading">{legend}</h1>
+        </legend>
+        {hint && <div className="govuk-hint">{hint}</div>}
+        {error && <p className="govuk-error-message"><span className="govuk-visually-hidden">Error:</span> {error}</p>}
+        <div className="govuk-checkboxes" data-module="govuk-checkboxes">
         {options.map((option, idx) => (
           <div key={option.value}>
             {dividerBefore && dividerBefore.includes(idx) && (
@@ -67,7 +68,8 @@ export default function CheckboxGroup({
             </div>
           </div>
         ))}
-      </div>
-    </fieldset>
+        </div>
+      </fieldset>
+    </div>
   );
 }
