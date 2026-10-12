@@ -18,11 +18,13 @@
 |----------|---------|----------------------|
 | What is your household income? | Under £12,570, £12,571 - £50,270, £50,271 - £125,140, £125,141+ | All income bands eligible (hybrid approach). Income determines support generosity/level, not eligibility. Lower income households receive more generous support. |
 
-## Existing Insulation
+## Uninsulated Parts
 
 | Question | Answers | Effect on Eligibility |
 |----------|---------|----------------------|
-| Which insulation do you have? (select all that apply) | Loft insulation, Cavity wall insulation, Solid wall insulation, Floor insulation, None of the above | Determines eligibility for insulation grants independently. All users are eligible based on insulation status. |
+| Which parts of your property are not insulated? (select all that apply) | Loft or roof, Walls, Floor, *or* All parts are insulated, *or* I'm not sure | **Any parts ticked**: Eligible for insulation grant covering those parts. **All parts are insulated**: Ineligible for insulation grant. **I'm not sure**: May be eligible – an assessor will check which parts need insulating. "All parts are insulated" and "I'm not sure" cannot be combined with other answers. Insulation eligibility is independent of heating. |
+
+We ask about *parts* of the property rather than *types* of insulation. A home has either cavity or solid walls, not both, so listing both types meant one always looked uninsulated. Asking about parts also means people don't tick parts their home doesn't have (e.g. a flat with no loft).
 
 ## Current Heating
 

@@ -26,7 +26,10 @@ One question per page, each with a Back link and a Continue button, following th
    - Shared ownership: "Do all owners agree to the work?"
    - Rent: "Do you have your landlord's consent?"
 6. **Household income** (radios): Under £12,570, £12,571 – £50,270, £50,271 – £125,140, £125,141+.
-7. **Existing insulation** (checkboxes): Loft, Cavity wall, Solid wall, Floor, None of the above.
+7. **Uninsulated parts** (checkboxes): "Which parts of your property are not insulated?"
+   - Loft or roof, Walls, Floor, or All parts are insulated, or I'm not sure.
+   - "All parts are insulated" and "I'm not sure" are each exclusive: ticking one clears the other options.
+   - The question asks about *parts of the home*, not *types of insulation*. This stops cavity and solid wall being counted as two separate parts, and means people don't tick parts their home doesn't have (for example, a flat with no loft).
    - Replaces the scaffolded radio options on `InsulationPage.jsx`.
 8. **Current heating** (radios): Gas boiler, Oil boiler, Electric heating, Heat pump, Other.
 9. **Check your answers** – summary list with Change links.
@@ -44,8 +47,9 @@ Each grant type is assessed independently.
 | Condition | Outcome |
 |---|---|
 | Already received an insulation grant | Not eligible |
-| Already has all four insulation types (loft, cavity wall, solid wall, floor) | Not eligible |
-| Otherwise | Eligible – grant covers each insulation type they do **not** already have |
+| All parts are insulated | Not eligible |
+| I'm not sure | May be eligible. An assessor will check which parts need insulating |
+| Otherwise | Eligible – grant covers each part they ticked as not insulated |
 
 ### Heat pump grant
 | Condition | Outcome |
@@ -69,7 +73,7 @@ All property types are treated the same in this prototype, including flats.
 
 ## Result page
 - Shows the outcome **per grant type** (insulation, heat pump).
-- For each eligible grant, shows the support percentage. For insulation, lists the types covered.
+- For each eligible grant, shows the support percentage. For insulation, lists the parts covered (or says an assessor will check, if they weren't sure).
 - For each ineligible grant, gives the reason (e.g. already received, already has a heat pump, no consent).
 - Uses a `govuk-panel`: green if eligible for at least one grant, otherwise grey/not eligible.
 - Next steps shown below the panel.
