@@ -5,7 +5,7 @@ import os from 'node:os';
 // AiSEng lab-VM reverse-proxy convention: public URLs are
 // https://<hostname>:<port> on ports 5000-5005 and 8100-8105.
 // Default to 5002; override via VITE_PORT and VITE_PUBLIC_HOSTNAME.
-const PORT = Number(process.env.VITE_PORT) || 5002;
+const PORT = 5000;
 const HOSTNAME = process.env.VITE_PUBLIC_HOSTNAME || os.hostname();
 
 export default defineConfig({
@@ -14,6 +14,8 @@ export default defineConfig({
     host: '0.0.0.0',
     port: PORT,
     strictPort: true,
+    // Allow requests via the lab reverse proxy (e.g. app-lab11118.labs.decoded.com)
+    allowedHosts: ['.labs.decoded.com'],
     hmr: {
       protocol: 'wss',
       host: HOSTNAME,
