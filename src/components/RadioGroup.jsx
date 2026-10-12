@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 export default function RadioGroup({
   name,
   legend,
@@ -17,7 +19,7 @@ export default function RadioGroup({
       {error && <p className="govuk-error-message"><span className="govuk-visually-hidden">Error:</span> {error}</p>}
       <div className="govuk-radios" data-module="govuk-radios">
         {options.map((option, idx) => (
-          <div key={option.value}>
+          <Fragment key={option.value}>
             {dividerBefore && dividerBefore.includes(idx) && (
               <div className="govuk-radios__divider">or</div>
             )}
@@ -35,7 +37,7 @@ export default function RadioGroup({
                 {option.label}
               </label>
             </div>
-          </div>
+          </Fragment>
         ))}
       </div>
     </fieldset>

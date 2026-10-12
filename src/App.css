@@ -8,6 +8,7 @@
   --govuk-green: #00703c;
   --govuk-red: #d4351c;
   --govuk-yellow: #ffdd00;
+  --govuk-logo-dot-colour: #00ffe0;
   --govuk-light-grey: #f3f2f1;
   --govuk-mid-grey: #b1b4b6;
   --govuk-dark-grey: #505a5f;
@@ -130,25 +131,83 @@ a:focus {
 
 /* Header */
 .govuk-header {
-  background: var(--govuk-black);
-  border-bottom: 10px solid var(--govuk-white);
+  font-size: 1rem;
+  line-height: 1;
+  border-bottom: 1px solid transparent;
+  background: var(--govuk-blue);
+  color: var(--govuk-white);
 }
 
 .govuk-header__container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: var(--govuk-spacing-2) var(--govuk-spacing-3);
+  position: relative;
+}
+
+.govuk-header__logo {
+  box-sizing: border-box;
+  padding-top: 16px;
+  padding-bottom: 12px;
+}
+
+.govuk-header__logotype {
+  display: inline-block;
+  position: relative;
+  top: -3px;
+  margin-bottom: 2px;
+  fill: currentcolor;
+  vertical-align: top;
+}
+
+.govuk-logo-dot {
+  fill: var(--govuk-logo-dot-colour);
+}
+
+:focus .govuk-logo-dot {
+  fill: currentcolor;
 }
 
 .govuk-header__link {
-  color: var(--govuk-white);
   text-decoration: none;
-  font-size: 24px;
-  font-weight: 700;
+}
+
+.govuk-header__link:link,
+.govuk-header__link:visited {
+  color: var(--govuk-white);
+}
+
+.govuk-header__link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.1578em;
 }
 
 .govuk-header__link:focus {
+  outline: 3px solid transparent;
   color: var(--govuk-black);
+  background-color: var(--govuk-focus-colour);
+  box-shadow: 0 -2px var(--govuk-focus-colour), 0 4px var(--govuk-black);
+  text-decoration: none;
+  box-decoration-break: clone;
+}
+
+.govuk-header__link--homepage {
+  display: inline;
+  margin-right: 10px;
+  font-size: 30px;
+}
+
+.govuk-header__link--homepage:not(:focus) {
+  background-color: var(--govuk-blue);
+}
+
+.govuk-header__link--homepage:hover,
+.govuk-header__link--homepage:active {
+  margin-bottom: -3px;
+  border-bottom: 3px solid;
+}
+
+.govuk-header__link--homepage:focus {
+  margin-bottom: 0;
+  border-bottom: 0;
 }
 
 /* Buttons */
@@ -250,46 +309,80 @@ a:focus {
 
 .govuk-radios__item {
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  position: relative;
   margin-bottom: var(--govuk-spacing-2);
 }
 
-.govuk-radios__input {
-  width: 40px;
-  height: 40px;
-  margin: 0;
-  margin-right: var(--govuk-spacing-2);
-  cursor: pointer;
-  flex-shrink: 0;
-  accent-color: var(--govuk-black);
-}
-
-.govuk-radios__input:focus {
-  outline: 3px solid var(--govuk-focus-colour);
-  outline-offset: 2px;
-}
-
-.govuk-radios__label {
-  font-size: 19px;
-  padding-top: 8px;
-  cursor: pointer;
+.govuk-radios__item:last-child,
+.govuk-radios__item:last-of-type {
   margin-bottom: 0;
 }
 
-.govuk-radios__label:focus {
-  outline: 3px solid var(--govuk-focus-colour);
-  outline-offset: 0;
-  background-color: var(--govuk-focus-colour);
-  color: var(--govuk-black);
+.govuk-radios__input {
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.govuk-radios__label {
+  align-self: center;
+  max-width: calc(100% - 74px);
+  margin-bottom: 0;
+  padding: 7px 15px;
+  font-size: 19px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.govuk-radios__label::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid currentcolor;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.govuk-radios__label::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 0;
+  height: 0;
+  border: 10px solid currentcolor;
+  border-radius: 50%;
+  opacity: 0;
+  background: currentcolor;
+}
+
+.govuk-radios__input:focus + .govuk-radios__label::before {
+  border-width: 4px;
+  outline: 3px solid transparent;
+  outline-offset: 1px;
+  box-shadow: 0 0 0 4px var(--govuk-focus-colour);
+}
+
+.govuk-radios__input:checked + .govuk-radios__label::after {
+  opacity: 1;
 }
 
 .govuk-radios__divider {
-  text-align: center;
-  margin-bottom: var(--govuk-spacing-3);
-  margin-top: var(--govuk-spacing-3);
-  color: var(--govuk-dark-grey);
-  font-size: 16px;
+  width: 40px;
+  margin-bottom: var(--govuk-spacing-2);
+  color: var(--govuk-black);
+  font-size: 1rem;
   font-weight: 400;
+  line-height: 1.25;
+  text-align: center;
 }
 
 /* Checkboxes */
@@ -299,46 +392,82 @@ a:focus {
 
 .govuk-checkboxes__item {
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  position: relative;
   margin-bottom: var(--govuk-spacing-2);
 }
 
-.govuk-checkboxes__input {
-  width: 40px;
-  height: 40px;
-  margin: 0;
-  margin-right: var(--govuk-spacing-2);
-  cursor: pointer;
-  flex-shrink: 0;
-  accent-color: var(--govuk-black);
-}
-
-.govuk-checkboxes__input:focus {
-  outline: 3px solid var(--govuk-focus-colour);
-  outline-offset: 2px;
-}
-
-.govuk-checkboxes__label {
-  font-size: 19px;
-  padding-top: 8px;
-  cursor: pointer;
+.govuk-checkboxes__item:last-child,
+.govuk-checkboxes__item:last-of-type {
   margin-bottom: 0;
 }
 
-.govuk-checkboxes__label:focus {
-  outline: 3px solid var(--govuk-focus-colour);
-  outline-offset: 0;
-  background-color: var(--govuk-focus-colour);
-  color: var(--govuk-black);
+.govuk-checkboxes__input {
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.govuk-checkboxes__label {
+  align-self: center;
+  max-width: calc(100% - 74px);
+  margin-bottom: 0;
+  padding: 7px 15px;
+  font-size: 19px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.govuk-checkboxes__label::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid currentcolor;
+  background: transparent;
+}
+
+.govuk-checkboxes__label::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 13px;
+  left: 10px;
+  width: 23px;
+  height: 12px;
+  transform: rotate(-45deg);
+  border: solid;
+  border-width: 0 0 5px 5px;
+  border-top-color: transparent;
+  opacity: 0;
+  background: transparent;
+}
+
+.govuk-checkboxes__input:focus + .govuk-checkboxes__label::before {
+  border-width: 4px;
+  outline: 3px solid transparent;
+  outline-offset: 1px;
+  box-shadow: 0 0 0 3px var(--govuk-focus-colour);
+}
+
+.govuk-checkboxes__input:checked + .govuk-checkboxes__label::after {
+  opacity: 1;
 }
 
 .govuk-checkboxes__divider {
-  text-align: center;
-  margin-bottom: var(--govuk-spacing-3);
-  margin-top: var(--govuk-spacing-3);
-  color: var(--govuk-dark-grey);
-  font-size: 16px;
+  width: 40px;
+  margin-bottom: var(--govuk-spacing-2);
+  color: var(--govuk-black);
+  font-size: 1rem;
   font-weight: 400;
+  line-height: 1.25;
+  text-align: center;
 }
 
 /* Error messages */
@@ -446,13 +575,72 @@ a:focus {
 /* Back link */
 .govuk-back-link {
   display: inline-block;
-  margin-bottom: var(--govuk-spacing-4);
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-left: 0.875em;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  text-decoration: underline;
+  text-decoration-thickness: max(1px, .0625rem);
+  text-underline-offset: 0.1578em;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-back-link {
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+
+.govuk-back-link:link,
+.govuk-back-link:visited,
+.govuk-back-link:active {
   color: var(--govuk-black);
-  font-size: 16px;
+}
+
+.govuk-back-link:hover {
+  text-decoration-thickness: max(3px, .1875rem, .12em);
+  text-decoration-skip-ink: none;
+}
+
+.govuk-back-link:focus {
+  outline: 3px solid transparent;
+  color: var(--govuk-black);
+  background-color: var(--govuk-focus-colour);
+  box-shadow: 0 -2px var(--govuk-focus-colour), 0 4px var(--govuk-black);
+  text-decoration: none;
+  box-decoration-break: clone;
 }
 
 .govuk-back-link::before {
-  content: "\2039 ";
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.1875em;
+  width: 0.4375em;
+  height: 0.4375em;
+  margin: auto 0;
+  transform: rotate(225deg);
+  border: solid;
+  border-width: max(1px, 0.0625em) max(1px, 0.0625em) 0 0;
+  border-color: var(--govuk-dark-grey);
+  font-size: max(16px, 1em);
+}
+
+.govuk-back-link:focus::before {
+  border-color: var(--govuk-black);
+}
+
+.govuk-back-link::after {
+  content: "";
+  position: absolute;
+  top: -14px;
+  right: 0;
+  bottom: -14px;
+  left: 0;
 }
 
 /* Visually hidden (for screen readers) */
