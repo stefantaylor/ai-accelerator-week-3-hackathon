@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   nextRoute,
+  continueRoute,
   backRoute,
   backRouteWithEarlyExit,
   firstIncompleteRoute,
@@ -52,6 +53,37 @@ describe('journey.js', () => {
 
     it('returns /result for unknown route', () => {
       expect(nextRoute('/unknown', emptyAnswers)).toBe('/prior-grants');
+    });
+  });
+
+  describe('continueRoute', () => {
+    const complete = {
+      ...emptyAnswers,
+      priorGrants: ['none'],
+      propertyType: 'detached',
+      ownership: 'ownOutright',
+      incomeBand: 'under12570',
+      uninsulatedParts: ['loft'],
+      heating: 'gasBoiler',
+    };
+
+    it('follows the normal journey when not changing an answer', () => {
+      expect(continueRoute('/property-type', complete, false)).toBe('/ownership');
+    });
+
+    it('returns to /check-answers after changing an answer', () => {
+      expect(continueRoute('/property-type', complete, true)).toBe('/check-answers');
+    });
+
+    it('asks a newly required question before returning to /check-answers', () => {
+      const answers = { ...complete, ownership: 'rent' };
+      expect(continueRoute('/ownership', answers, true)).toBe('/consent?change=true');
+      expect(continueRoute('/consent', { ...answers, consent: 'yes' }, true)).toBe('/check-answers');
+    });
+
+    it('goes to /result when a change leads to early exit', () => {
+      const answers = { ...complete, priorGrants: ['insulation', 'heatPump'] };
+      expect(continueRoute('/prior-grants', answers, true)).toBe('/result');
     });
   });
 
