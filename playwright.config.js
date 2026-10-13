@@ -7,10 +7,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: 'list',
+  // List in the terminal, plus an HTML report with a video of each test
+  reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
+    video: 'on',
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
