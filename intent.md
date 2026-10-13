@@ -37,7 +37,7 @@ One question per page, each with a Back link and a Continue button, following th
 5. **Consent** (conditional, radios Yes/No) – only shown for:
    - Shared ownership: "Do all owners agree to the work?"
    - Rent: "Do you have your landlord's consent?"
-6. **Household income** (radios): Under £12,570, £12,571 – £50,270, £50,271 – £125,140, £125,141+.
+6. **Household income** (radios): £12,570 or less, £12,571 – £50,270, £50,271 – £125,140, £125,141+.
 7. **Uninsulated parts** (checkboxes): "Which parts of your property are not insulated?"
    - Loft or roof, Walls, Floor, or All parts are insulated, or I'm not sure.
    - "All parts are insulated" and "I'm not sure" are each exclusive: ticking one clears the other options.
@@ -75,7 +75,7 @@ Income never affects eligibility, only the percentage of costs covered:
 
 | Household income | Support |
 |---|---|
-| Under £12,570 | 100% |
+| £12,570 or less | 100% |
 | £12,571 – £50,270 | 75% |
 | £50,271 – £125,140 | 50% |
 | £125,141+ | 25% |

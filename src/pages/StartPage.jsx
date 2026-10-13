@@ -1,13 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import GovukButton from '../components/GovukButton';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 
-function StartPage({ answers, onAnswer }) {
+function StartPage() {
   const navigate = useNavigate();
-  document.title = 'Check if you can get a Green Home Grant - GOV.UK';
-
-  const handleStart = () => {
-    navigate('/prior-grants');
-  };
+  usePageTitle('');
 
   return (
     <>
@@ -17,7 +14,7 @@ function StartPage({ answers, onAnswer }) {
       <p className="govuk-body-l">
         Use this tool to check whether you might be eligible for a Green Home Grant to help with the cost of insulation or a heat pump.
       </p>
-      <GovukButton variant="start" onClick={handleStart}>
+      <GovukButton variant="start" onClick={() => navigate('/prior-grants')}>
         Start now
       </GovukButton>
     </>

@@ -1,24 +1,24 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { assessEligibility } from '../eligibility/assessEligibility.js';
 import { getLabel, getReasonText } from '../content/labels.js';
 import { backRouteWithEarlyExit } from '../flow/journey.js';
 import GovukButton from '../components/GovukButton';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 
-function ResultPage({ answers, onAnswer, onReset }) {
+function ResultPage({ answers, onReset }) {
   const navigate = useNavigate();
-  document.title = 'Result - Check if you can get a Green Home Grant - GOV.UK';
+  usePageTitle('Result');
 
   const result = assessEligibility(answers);
 
-  const handleBack = () => {
-    navigate(backRouteWithEarlyExit('/result', answers));
+  const handleStartAgain = () => {
+    onReset();
+    navigate('/prior-grants');
   };
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
-      </a>
+      <Link to={backRouteWithEarlyExit('/result', answers)} className="govuk-back-link">Back</Link>
 
       {result.overallEligible ? (
         <div className="govuk-panel">
@@ -65,7 +65,7 @@ function ResultPage({ answers, onAnswer, onReset }) {
         If you are eligible, you can apply for a Green Home Grant using the official application process.
       </p>
 
-      <GovukButton onClick={() => { onReset(); navigate('/prior-grants'); }}>Start again</GovukButton>
+      <GovukButton onClick={handleStartAgain}>Start again</GovukButton>
     </>
   );
 }

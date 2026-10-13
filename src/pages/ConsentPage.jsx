@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RadioGroup from '../components/RadioGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
-import { isAnswered } from '../state/answers.js';
+import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
 import { continueRoute, backRoute } from '../flow/journey.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
+
+const FIELD = 'consent';
+const ROUTE = '/consent';
+
+const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value) }));
 
 export default function ConsentPage({ answers, onAnswer }) {
   const navigate = useNavigate();
@@ -13,57 +19,44 @@ export default function ConsentPage({ answers, onAnswer }) {
   const [errors, setErrors] = useState([]);
 
   const isSharedOwnership = answers.ownership === 'sharedOwnership';
-  const legend = isSharedOwnership
+  const question = isSharedOwnership
     ? 'Do all owners of the property agree to the work?'
     : 'Do you have your landlord\'s permission for the work?';
-
   const errorMessage = isSharedOwnership
     ? 'Select yes if all owners agree to the work'
     : 'Select yes if you have your landlord\'s permission';
 
-  // Set document title
-  const hasErrors = errors.length > 0;
-  document.title = `${hasErrors ? 'Error: ' : ''}${legend} - Check if you can get a Green Home Grant - GOV.UK`;
+  usePageTitle(question, errors.length > 0);
 
-  const handleContinue = () => {
-    // Validate
-    if (!isAnswered('consent', answers.consent)) {
-      setErrors([{ fieldId: 'consent', message: errorMessage }]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isAnswered(FIELD, answers[FIELD])) {
+      setErrors([{ fieldId: FIELD, message: errorMessage }]);
       return;
     }
 
     setErrors([]);
-    onAnswer('consent', answers.consent);
-    navigate(continueRoute('/consent', answers, searchParams.get('change') === 'true'));
+    navigate(continueRoute(ROUTE, answers, searchParams.get('change') === 'true'));
   };
-
-  const handleBack = () => {
-    navigate(backRoute('/consent', answers));
-  };
-
-  const options = [
-    { value: 'yes', label: getLabel('consent', 'yes') },
-    { value: 'no', label: getLabel('consent', 'no') },
-  ];
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
-      </a>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">Back</Link>
 
       <ErrorSummary errors={errors} />
 
-      <RadioGroup
-        name="consent"
-        legend={legend}
-        options={options}
-        value={answers.consent}
-        onChange={(value) => onAnswer('consent', value)}
-        error={errors.find(e => e.fieldId === 'consent')?.message}
-      />
+      <form onSubmit={handleSubmit} noValidate>
+        <RadioGroup
+          name={FIELD}
+          legend={question}
+          options={options}
+          value={answers[FIELD]}
+          onChange={(value) => onAnswer(FIELD, value)}
+          error={errors.find(e => e.fieldId === FIELD)?.message}
+        />
 
-      <GovukButton onClick={handleContinue}>Continue</GovukButton>
+        <GovukButton type="submit">Continue</GovukButton>
+      </form>
     </>
   );
 }

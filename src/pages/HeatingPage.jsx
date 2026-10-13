@@ -1,60 +1,56 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RadioGroup from '../components/RadioGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
-import { isAnswered } from '../state/answers.js';
+import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
 import { continueRoute, backRoute } from '../flow/journey.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
+
+const FIELD = 'heating';
+const ROUTE = '/heating';
+const QUESTION = 'What is your main heating system?';
+const ERROR_MESSAGE = 'Select your main heating system';
+
+const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value) }));
 
 function HeatingPage({ answers, onAnswer }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  document.title = `${errors.length ? 'Error: ' : ''}What is your main heating system? - Check if you can get a Green Home Grant - GOV.UK`;
+  usePageTitle(QUESTION, errors.length > 0);
 
-  const handleContinue = () => {
-    if (!isAnswered('heating', answers.heating)) {
-      setErrors([{ fieldId: 'heating', message: 'Select your main heating system' }]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isAnswered(FIELD, answers[FIELD])) {
+      setErrors([{ fieldId: FIELD, message: ERROR_MESSAGE }]);
       return;
     }
 
     setErrors([]);
-    onAnswer('heating', answers.heating);
-    navigate(continueRoute('/heating', answers, searchParams.get('change') === 'true'));
+    navigate(continueRoute(ROUTE, answers, searchParams.get('change') === 'true'));
   };
-
-  const handleBack = () => {
-    navigate(backRoute('/heating', answers));
-  };
-
-  const options = [
-    { value: 'gasBoiler', label: getLabel('heating', 'gasBoiler') },
-    { value: 'oilBoiler', label: getLabel('heating', 'oilBoiler') },
-    { value: 'electric', label: getLabel('heating', 'electric') },
-    { value: 'heatPump', label: getLabel('heating', 'heatPump') },
-    { value: 'other', label: getLabel('heating', 'other') },
-  ];
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
-      </a>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">Back</Link>
 
       <ErrorSummary errors={errors} />
 
-      <RadioGroup
-        name="heating"
-        legend="What is your main heating system?"
-        options={options}
-        value={answers.heating}
-        onChange={(value) => onAnswer('heating', value)}
-        error={errors.find(e => e.fieldId === 'heating')?.message}
-      />
+      <form onSubmit={handleSubmit} noValidate>
+        <RadioGroup
+          name={FIELD}
+          legend={QUESTION}
+          options={options}
+          value={answers[FIELD]}
+          onChange={(value) => onAnswer(FIELD, value)}
+          error={errors.find(e => e.fieldId === FIELD)?.message}
+        />
 
-      <GovukButton onClick={handleContinue}>Continue</GovukButton>
+        <GovukButton type="submit">Continue</GovukButton>
+      </form>
     </>
   );
 }

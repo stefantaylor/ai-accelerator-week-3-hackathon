@@ -1,130 +1,87 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getLabel } from '../content/labels.js';
 import { backRoute } from '../flow/journey.js';
 import GovukButton from '../components/GovukButton';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 
-function CheckAnswersPage({ answers, onAnswer }) {
+function SummaryRow({ label, value, changeRoute, hiddenText }) {
+  return (
+    <div className="govuk-summary-list__row">
+      <dt className="govuk-summary-list__key">{label}</dt>
+      <dd className="govuk-summary-list__value">{value}</dd>
+      <dd className="govuk-summary-list__actions">
+        <Link className="govuk-link" to={`${changeRoute}?change=true`}>
+          Change<span className="govuk-visually-hidden"> {hiddenText}</span>
+        </Link>
+      </dd>
+    </div>
+  );
+}
+
+function CheckAnswersPage({ answers }) {
   const navigate = useNavigate();
-  document.title = 'Check your answers - Check if you can get a Green Home Grant - GOV.UK';
+  usePageTitle('Check your answers');
 
-  const handleBack = () => {
-    navigate(backRoute('/check-answers', answers));
-  };
+  const consentRequired = answers.ownership === 'sharedOwnership' || answers.ownership === 'rent';
 
-  const handleChange = (route) => {
-    navigate(`${route}?change=true`);
-  };
-
-  const handleContinue = () => {
-    navigate('/result');
-  };
+  const priorGrantsValue = answers.priorGrants.includes('none')
+    ? getLabel('priorGrants', 'none')
+    : answers.priorGrants.map(grant => getLabel('priorGrants', grant)).join(', ');
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
-      </a>
+      <Link to={backRoute('/check-answers', answers)} className="govuk-back-link">Back</Link>
 
       <h1 className="govuk-heading-l">Check your answers</h1>
 
       <dl className="govuk-summary-list">
-        {/* Prior Grants */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Green Home Grants received</dt>
-          <dd className="govuk-summary-list__value">
-            {answers.priorGrants.length === 0 ? (
-              <span>No grants received</span>
-            ) : answers.priorGrants.includes('none') ? (
-              <span>{getLabel('priorGrants', 'none')}</span>
-            ) : (
-              <span>{answers.priorGrants.map(grant => getLabel('priorGrants', grant)).join(', ')}</span>
-            )}
-          </dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/prior-grants'); }}>
-              Change<span className="govuk-visually-hidden"> grants received</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Property Type */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Property type</dt>
-          <dd className="govuk-summary-list__value">{getLabel('propertyType', answers.propertyType)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/property-type'); }}>
-              Change<span className="govuk-visually-hidden"> property type</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Ownership */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Ownership</dt>
-          <dd className="govuk-summary-list__value">{getLabel('ownership', answers.ownership)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/ownership'); }}>
-              Change<span className="govuk-visually-hidden"> ownership</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Consent (conditional) */}
-        {(answers.ownership === 'sharedOwnership' || answers.ownership === 'rent') && (
-          <div className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">
-              {answers.ownership === 'sharedOwnership' ? 'All owners agree' : 'Landlord consent'}
-            </dt>
-            <dd className="govuk-summary-list__value">{getLabel('consent', answers.consent)}</dd>
-            <dd className="govuk-summary-list__actions">
-              <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/consent'); }}>
-                Change<span className="govuk-visually-hidden"> consent</span>
-              </a>
-            </dd>
-          </div>
+        <SummaryRow
+          label="Green Home Grants received"
+          value={priorGrantsValue}
+          changeRoute="/prior-grants"
+          hiddenText="grants received"
+        />
+        <SummaryRow
+          label="Property type"
+          value={getLabel('propertyType', answers.propertyType)}
+          changeRoute="/property-type"
+          hiddenText="property type"
+        />
+        <SummaryRow
+          label="Ownership"
+          value={getLabel('ownership', answers.ownership)}
+          changeRoute="/ownership"
+          hiddenText="ownership"
+        />
+        {consentRequired && (
+          <SummaryRow
+            label={answers.ownership === 'sharedOwnership' ? 'All owners agree' : 'Landlord consent'}
+            value={getLabel('consent', answers.consent)}
+            changeRoute="/consent"
+            hiddenText="consent"
+          />
         )}
-
-        {/* Income */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Household income</dt>
-          <dd className="govuk-summary-list__value">{getLabel('incomeBand', answers.incomeBand)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/income'); }}>
-              Change<span className="govuk-visually-hidden"> income</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Uninsulated parts */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Uninsulated parts</dt>
-          <dd className="govuk-summary-list__value">
-            {answers.uninsulatedParts.length === 0 ? (
-              <span>Not answered</span>
-            ) : (
-              <span>{answers.uninsulatedParts.map(part => getLabel('uninsulatedParts', part)).join(', ')}</span>
-            )}
-          </dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/insulation'); }}>
-              Change<span className="govuk-visually-hidden"> uninsulated parts</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Heating */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Heating system</dt>
-          <dd className="govuk-summary-list__value">{getLabel('heating', answers.heating)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/heating'); }}>
-              Change<span className="govuk-visually-hidden"> heating system</span>
-            </a>
-          </dd>
-        </div>
+        <SummaryRow
+          label="Household income"
+          value={getLabel('incomeBand', answers.incomeBand)}
+          changeRoute="/income"
+          hiddenText="income"
+        />
+        <SummaryRow
+          label="Uninsulated parts"
+          value={answers.uninsulatedParts.map(part => getLabel('uninsulatedParts', part)).join(', ')}
+          changeRoute="/insulation"
+          hiddenText="uninsulated parts"
+        />
+        <SummaryRow
+          label="Heating system"
+          value={getLabel('heating', answers.heating)}
+          changeRoute="/heating"
+          hiddenText="heating system"
+        />
       </dl>
 
-      <GovukButton onClick={handleContinue}>Accept and continue</GovukButton>
+      <GovukButton onClick={() => navigate('/result')}>Accept and continue</GovukButton>
     </>
   );
 }

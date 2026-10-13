@@ -1,59 +1,56 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RadioGroup from '../components/RadioGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
-import { isAnswered } from '../state/answers.js';
+import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
 import { continueRoute, backRoute } from '../flow/journey.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
+
+const FIELD = 'incomeBand';
+const ROUTE = '/income';
+const QUESTION = 'What is your annual household income?';
+const ERROR_MESSAGE = 'Select your annual household income';
+
+const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value) }));
 
 function IncomePage({ answers, onAnswer }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  document.title = `${errors.length ? 'Error: ' : ''}What is your annual household income? - Check if you can get a Green Home Grant - GOV.UK`;
+  usePageTitle(QUESTION, errors.length > 0);
 
-  const handleContinue = () => {
-    if (!isAnswered('incomeBand', answers.incomeBand)) {
-      setErrors([{ fieldId: 'incomeBand', message: 'Select your annual household income' }]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isAnswered(FIELD, answers[FIELD])) {
+      setErrors([{ fieldId: FIELD, message: ERROR_MESSAGE }]);
       return;
     }
 
     setErrors([]);
-    onAnswer('incomeBand', answers.incomeBand);
-    navigate(continueRoute('/income', answers, searchParams.get('change') === 'true'));
+    navigate(continueRoute(ROUTE, answers, searchParams.get('change') === 'true'));
   };
-
-  const handleBack = () => {
-    navigate(backRoute('/income', answers));
-  };
-
-  const options = [
-    { value: 'under12570', label: getLabel('incomeBand', 'under12570') },
-    { value: '12571to50270', label: getLabel('incomeBand', '12571to50270') },
-    { value: '50271to125140', label: getLabel('incomeBand', '50271to125140') },
-    { value: 'over125141', label: getLabel('incomeBand', 'over125141') },
-  ];
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
-      </a>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">Back</Link>
 
       <ErrorSummary errors={errors} />
 
-      <RadioGroup
-        name="incomeBand"
-        legend="What is your annual household income?"
-        options={options}
-        value={answers.incomeBand}
-        onChange={(value) => onAnswer('incomeBand', value)}
-        error={errors.find(e => e.fieldId === 'incomeBand')?.message}
-      />
+      <form onSubmit={handleSubmit} noValidate>
+        <RadioGroup
+          name={FIELD}
+          legend={QUESTION}
+          options={options}
+          value={answers[FIELD]}
+          onChange={(value) => onAnswer(FIELD, value)}
+          error={errors.find(e => e.fieldId === FIELD)?.message}
+        />
 
-      <GovukButton onClick={handleContinue}>Continue</GovukButton>
+        <GovukButton type="submit">Continue</GovukButton>
+      </form>
     </>
   );
 }

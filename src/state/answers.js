@@ -10,7 +10,10 @@ export const emptyAnswers = {
   heating: '',
 };
 
-const ALLOWED_VALUES = {
+export const STRING_FIELDS = ['propertyType', 'ownership', 'consent', 'incomeBand', 'heating'];
+export const ARRAY_FIELDS = ['priorGrants', 'uninsulatedParts'];
+
+export const ALLOWED_VALUES = {
   priorGrants: ['insulation', 'heatPump', 'none'],
   propertyType: ['detached', 'semiDetached', 'terraced', 'flat', 'bungalow'],
   ownership: ['ownOutright', 'mortgage', 'sharedOwnership', 'rent'],
@@ -21,18 +24,18 @@ const ALLOWED_VALUES = {
 };
 
 // V1: Validate single value against allowed list
-function validateValue(field, value) {
+export function validateValue(field, value) {
   if (typeof value !== 'string') return false;
   if (value === '') return true; // unanswered is valid
   const allowed = ALLOWED_VALUES[field];
-  return allowed && allowed.includes(value);
+  return Boolean(allowed && allowed.includes(value));
 }
 
 // V2: Validate array contains only allowed values with no duplicates
-function validateArray(field, values) {
+export function validateArray(field, values) {
   if (!Array.isArray(values)) return false;
-  if (values.length === 0) return true; // empty array is valid
   const allowed = ALLOWED_VALUES[field];
+  if (!allowed) return false;
   const seen = new Set();
   for (const val of values) {
     if (!allowed.includes(val) || seen.has(val)) return false;
@@ -42,7 +45,7 @@ function validateArray(field, values) {
 }
 
 // V3: Enforce exclusive options
-function isExclusive(field, values) {
+export function isExclusive(field, values) {
   if (field === 'priorGrants' && values.includes('none')) {
     return values.length === 1;
   }
@@ -55,50 +58,33 @@ function isExclusive(field, values) {
 }
 
 // V4: Consent only required for sharedOwnership/rent
-function needsConsent(ownership) {
+export function needsConsent(ownership) {
   return ownership === 'sharedOwnership' || ownership === 'rent';
 }
 
-// Apply V3 and V4 rules when setting an answer
+// Apply V1-V4 rules when setting an answer. Returns the original object
+// unchanged when the new value is not valid.
 export function setAnswer(answers, field, value) {
   const updated = { ...answers };
 
-  // Handle array fields
-  if (field === 'priorGrants' || field === 'uninsulatedParts') {
+  if (ARRAY_FIELDS.includes(field)) {
     if (!validateArray(field, value)) return answers;
     if (!isExclusive(field, value)) return answers;
-
-    // V3: When setting exclusive option, clear others
-    if (field === 'priorGrants' && value.includes('none') && value.length === 1) {
-      updated[field] = ['none'];
-    } else if (field === 'uninsulatedParts') {
-      if (value.includes('allInsulated') && value.length === 1) {
-        updated[field] = ['allInsulated'];
-      } else if (value.includes('notSure') && value.length === 1) {
-        updated[field] = ['notSure'];
-      } else if (value.some(v => !['allInsulated', 'notSure'].includes(v))) {
-        // Removing exclusive options if present
-        updated[field] = value.filter(v => !['allInsulated', 'notSure'].includes(v));
-      } else {
-        updated[field] = value;
-      }
-    } else {
-      updated[field] = value;
-    }
-  } else {
-    // Handle string fields
-    if (!validateValue(field, value)) return answers;
-
-    // V4: Consent can only be given when the ownership type asks for it
-    if (field === 'consent' && value !== '' && !needsConsent(answers.ownership)) return answers;
-
     updated[field] = value;
+    return updated;
+  }
 
-    // V4: Clear consent whenever ownership changes - rent and shared ownership
-    // ask different consent questions, so an earlier answer does not carry over
-    if (field === 'ownership' && value !== answers.ownership) {
-      updated.consent = '';
-    }
+  if (!validateValue(field, value)) return answers;
+
+  // V4: Consent can only be given when the ownership type asks for it
+  if (field === 'consent' && value !== '' && !needsConsent(answers.ownership)) return answers;
+
+  updated[field] = value;
+
+  // V4: Clear consent whenever ownership changes - rent and shared ownership
+  // ask different consent questions, so an earlier answer does not carry over
+  if (field === 'ownership' && value !== answers.ownership) {
+    updated.consent = '';
   }
 
   return updated;

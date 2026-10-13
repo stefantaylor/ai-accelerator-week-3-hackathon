@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 
+// The service does not set analytics cookies yet. The choice is stored so the
+// banner is not shown again, and so analytics can honour it if added later.
 const STORAGE_KEY = 'ghg-checker:cookie-consent';
 
 function loadChoice() {
   try {
     return window.localStorage.getItem(STORAGE_KEY);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -13,7 +15,7 @@ function loadChoice() {
 function saveChoice(choice) {
   try {
     window.localStorage.setItem(STORAGE_KEY, choice);
-  } catch (e) {
+  } catch {
     // Storage unavailable - banner will show again next visit
   }
 }
@@ -51,7 +53,7 @@ export default function CookieBanner() {
               <div className="govuk-cookie-banner__content">
                 <p className="govuk-body">We use some essential cookies to make this service work.</p>
                 <p className="govuk-body">
-                  We'd also like to use analytics cookies so we can understand how you use the service and make
+                  We’d also like to use analytics cookies so we can understand how you use the service and make
                   improvements.
                 </p>
               </div>
@@ -62,6 +64,7 @@ export default function CookieBanner() {
                 <button type="button" className="govuk-button" onClick={() => handleChoice('reject')}>
                   Reject analytics cookies
                 </button>
+                <a className="govuk-link" href="https://www.gov.uk/help/cookies">View cookies</a>
               </div>
             </div>
           </div>

@@ -16,7 +16,7 @@
 
 | Question | Answers | Effect on Eligibility |
 |----------|---------|----------------------|
-| What is your household income? | Under £12,570, £12,571 - £50,270, £50,271 - £125,140, £125,141+ | All income bands eligible (hybrid approach). Income determines support generosity/level, not eligibility. Lower income households receive more generous support. |
+| What is your household income? | £12,570 or less, £12,571 - £50,270, £50,271 - £125,140, £125,141+ | All income bands eligible (hybrid approach). Income determines support generosity/level, not eligibility. Lower income households receive more generous support. |
 
 ## Uninsulated Parts
 
