@@ -32,7 +32,6 @@ plan.md           App Plan
 
 <br>
 <br>
-***
 <br>
 
 # Green Home Grant eligibility checker
