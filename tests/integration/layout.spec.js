@@ -63,3 +63,22 @@ test.describe('Small screens (320px)', () => {
     expect(Math.round(button.width)).toBe(Math.round(container.width));
   });
 });
+
+test.describe('Skip link', () => {
+  test('moves focus to the main content', async ({ page }) => {
+    await page.goto('/prior-grants');
+    const skipLink = page.getByRole('link', { name: 'Skip to main content', exact: true });
+    await skipLink.focus();
+    await expect(skipLink).toBeVisible();
+    await skipLink.press('Enter');
+    await expect(page.locator('main')).toBeFocused();
+  });
+});
+
+test.describe('Route guards', () => {
+  test('opening /result directly goes to the first question', async ({ page }) => {
+    await page.goto('/result');
+    await expect(page).toHaveURL(/\/prior-grants$/);
+    await expect(page.getByText('null%')).toHaveCount(0);
+  });
+});

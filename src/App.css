@@ -261,6 +261,40 @@ a:focus {
   padding: 10px var(--govuk-spacing-6);
 }
 
+/* Skip link - hidden until it receives keyboard focus */
+.govuk-skip-link {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  font-size: 16px;
+  color: var(--govuk-black);
+  text-decoration: underline;
+}
+
+.govuk-skip-link:focus {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  margin: inherit !important;
+  overflow: visible !important;
+  clip-path: none !important;
+  white-space: normal !important;
+  display: block;
+  padding: var(--govuk-spacing-2) var(--govuk-spacing-3);
+  outline: 3px solid var(--govuk-focus-colour);
+  outline-offset: 0;
+  background-color: var(--govuk-focus-colour);
+}
+
+/* Main gets focus from the skip link but should not show an outline */
+.govuk-main-wrapper:focus {
+  outline: none;
+}
+
 /* Forms */
 .govuk-form-group {
   margin-bottom: var(--govuk-spacing-6);

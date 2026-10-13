@@ -131,7 +131,7 @@ Initial state: every `string` field is `''` and every `string[]` field is `[]`.
 - V1. A `string` field is either `''` (unanswered) or one of its allowed values.
 - V2. A `string[]` field contains only allowed values and has no duplicates.
 - V3. Exclusive options: if `priorGrants` contains `'none'`, it contains nothing else. If `uninsulatedParts` contains `'allInsulated'` or `'notSure'`, it contains nothing else.
-- V4. `consent` must be `''` when `ownership ∉ {sharedOwnership, rent}`. Changing ownership to a type that doesn't need consent clears `consent`.
+- V4. `consent` must be `''` when `ownership ∉ {sharedOwnership, rent}`. Changing ownership to any different value clears `consent`, because rent and shared ownership ask different consent questions.
 - V5. A field is "answered" when it is a non-empty string or a non-empty array.
 
 ### 3.2 `EligibilityResult` model (output of the rules engine)
@@ -162,7 +162,7 @@ If more than one reason applies, the first in this order wins: `ALREADY_RECEIVED
 
 | Income value | Label | Support % |
 |---|---|---|
-| `under12570` | Under £12,570 | 100 |
+| `under12570` | £12,570 or less | 100 |
 | `12571to50270` | £12,571 to £50,270 | 75 |
 | `50271to125140` | £50,271 to £125,140 | 50 |
 | `over125141` | £125,141 or more | 25 |

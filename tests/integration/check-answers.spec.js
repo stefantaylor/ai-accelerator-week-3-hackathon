@@ -11,7 +11,7 @@ test.describe('Check your answers', () => {
     await expect(summaryRow(page, 'Green Home Grants received')).toContainText('Insulation grant');
     await expect(summaryRow(page, 'Property type')).toContainText('Detached');
     await expect(summaryRow(page, 'Ownership')).toContainText('Own outright');
-    await expect(summaryRow(page, 'Household income')).toContainText('Under £12,570');
+    await expect(summaryRow(page, 'Household income')).toContainText('£12,570 or less');
     await expect(summaryRow(page, 'Uninsulated parts')).toContainText('Loft or roof, Walls, Floor');
     await expect(summaryRow(page, 'Heating system')).toContainText('Gas boiler');
     await expect(page.locator('.govuk-summary-list ul')).toHaveCount(0);

@@ -130,11 +130,17 @@ describe('answers.js', () => {
       expect(answers.consent).toBe('yes');
     });
 
-    it('keeps consent when ownership changes to rent', () => {
+    it('clears consent when ownership changes from sharedOwnership to rent', () => {
       let answers = setAnswer(emptyAnswers, 'ownership', 'sharedOwnership');
       answers = setAnswer(answers, 'consent', 'yes');
       answers = setAnswer(answers, 'ownership', 'rent');
-      expect(answers.consent).toBe('yes');
+      expect(answers.consent).toBe('');
+    });
+
+    it('ignores consent when ownership does not need it', () => {
+      let answers = setAnswer(emptyAnswers, 'ownership', 'mortgage');
+      answers = setAnswer(answers, 'consent', 'yes');
+      expect(answers.consent).toBe('');
     });
   });
 
@@ -168,7 +174,8 @@ describe('answers.js', () => {
       };
 
       for (const field of stringFields) {
-        const updated = setAnswer(emptyAnswers, field, testValues[field]);
+        const base = field === 'consent' ? { ...emptyAnswers, ownership: 'rent' } : emptyAnswers;
+        const updated = setAnswer(base, field, testValues[field]);
         expect(updated[field]).toBe(testValues[field]);
       }
     });

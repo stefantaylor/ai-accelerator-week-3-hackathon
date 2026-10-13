@@ -193,6 +193,18 @@ export function canAccessRoute(route, answers) {
   return areAllRequiredBefore(route, answers);
 }
 
+// Route guard: where to send the user instead, or null if they can stay
+export function guardRedirect(route, answers) {
+  if (canAccessRoute(route, answers)) return null;
+
+  // Consent not needed for this ownership type - skip past it
+  if (route === '/consent' && isAnswered('ownership', answers.ownership) && !shouldShowConsent(answers)) {
+    return nextRoute('/ownership', answers);
+  }
+
+  return firstIncompleteRoute(answers);
+}
+
 // Special consent logic: if ownership changes to a type that doesn't need consent,
 // and we're at /consent, should we show it or skip to next?
 export function shouldShowConsent(answers) {

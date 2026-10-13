@@ -44,7 +44,7 @@ test.describe('Eligibility journey', () => {
     await page.getByRole('radio', { name: 'No', exact: true }).check();
     await continueToNext(page);
 
-    await page.getByRole('radio', { name: 'Under £12,570', exact: true }).check();
+    await page.getByRole('radio', { name: '£12,570 or less', exact: true }).check();
     await continueToNext(page);
     await page.getByRole('checkbox', { name: 'Walls', exact: true }).check();
     await continueToNext(page);

@@ -88,10 +88,15 @@ export function setAnswer(answers, field, value) {
   } else {
     // Handle string fields
     if (!validateValue(field, value)) return answers;
+
+    // V4: Consent can only be given when the ownership type asks for it
+    if (field === 'consent' && value !== '' && !needsConsent(answers.ownership)) return answers;
+
     updated[field] = value;
 
-    // V4: Clear consent if ownership changes to a type that doesn't need it
-    if (field === 'ownership' && !needsConsent(value)) {
+    // V4: Clear consent whenever ownership changes - rent and shared ownership
+    // ask different consent questions, so an earlier answer does not carry over
+    if (field === 'ownership' && value !== answers.ownership) {
       updated.consent = '';
     }
   }

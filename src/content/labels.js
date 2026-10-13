@@ -19,7 +19,7 @@ export const labels = {
     no: 'No',
   },
   incomeBand: {
-    under12570: 'Under £12,570',
+    under12570: '£12,570 or less',
     '12571to50270': '£12,571 to £50,270',
     '50271to125140': '£50,271 to £125,140',
     over125141: '£125,141 or more',

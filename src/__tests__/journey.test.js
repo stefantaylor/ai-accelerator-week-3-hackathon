@@ -8,6 +8,7 @@ import {
   isJourneyComplete,
   canAccessRoute,
   shouldShowConsent,
+  guardRedirect,
 } from '../flow/journey.js';
 import { emptyAnswers } from '../state/answers.js';
 
@@ -341,6 +342,48 @@ describe('journey.js', () => {
 
     it('returns false when ownership not answered', () => {
       expect(shouldShowConsent(emptyAnswers)).toBe(false);
+    });
+  });
+  describe('guardRedirect', () => {
+    const complete = {
+      ...emptyAnswers,
+      priorGrants: ['none'],
+      propertyType: 'terraced',
+      ownership: 'ownOutright',
+      incomeBand: 'under12570',
+      uninsulatedParts: ['loft'],
+      heating: 'gasBoiler',
+    };
+
+    it('sends a fresh session on /result back to /prior-grants', () => {
+      expect(guardRedirect('/result', emptyAnswers)).toBe('/prior-grants');
+    });
+
+    it('sends a fresh session on /check-answers back to /prior-grants', () => {
+      expect(guardRedirect('/check-answers', emptyAnswers)).toBe('/prior-grants');
+    });
+
+    it('sends a skipped-ahead user to the first unanswered question', () => {
+      const answers = { ...emptyAnswers, priorGrants: ['none'], propertyType: 'flat' };
+      expect(guardRedirect('/heating', answers)).toBe('/ownership');
+    });
+
+    it('allows /result when the journey is complete', () => {
+      expect(guardRedirect('/result', complete)).toBeNull();
+    });
+
+    it('allows /result on the early-exit path', () => {
+      const answers = { ...emptyAnswers, priorGrants: ['insulation', 'heatPump'] };
+      expect(guardRedirect('/result', answers)).toBeNull();
+    });
+
+    it('sends /check-answers to /result on the early-exit path', () => {
+      const answers = { ...emptyAnswers, priorGrants: ['insulation', 'heatPump'] };
+      expect(guardRedirect('/check-answers', answers)).toBe('/result');
+    });
+
+    it('skips /consent when ownership does not need it', () => {
+      expect(guardRedirect('/consent', complete)).toBe('/income');
     });
   });
 });

@@ -14,7 +14,7 @@ export async function completeJourney(page, {
   propertyType = 'Detached',
   ownership = 'Own outright',
   consent,
-  income = 'Under £12,570',
+  income = '£12,570 or less',
   uninsulatedParts = ['Loft or roof', 'Walls'],
   heating = 'Gas boiler',
 } = {}) {

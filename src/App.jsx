@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import CookieBanner from './components/CookieBanner';
 import GovukHeader from './components/GovukHeader';
 import PhaseBanner from './components/PhaseBanner';
 import GovukFooter from './components/GovukFooter';
 import { emptyAnswers, setAnswer } from './state/answers.js';
 import { load, save } from './state/answersStore.js';
+import { guardRedirect } from './flow/journey.js';
 import StartPage from './pages/StartPage';
 import PriorGrantsPage from './pages/PriorGrantsPage';
 import PropertyTypePage from './pages/PropertyTypePage';
@@ -17,6 +18,12 @@ import HeatingPage from './pages/HeatingPage';
 import CheckAnswersPage from './pages/CheckAnswersPage';
 import ResultPage from './pages/ResultPage';
 import AccessibilityStatementPage from './pages/AccessibilityStatementPage';
+
+// Sends the user to the first unanswered question if they skip ahead
+function Guard({ route, answers, children }) {
+  const redirect = guardRedirect(route, answers);
+  return redirect ? <Navigate to={redirect} replace /> : children;
+}
 
 function App() {
   const [answers, setAnswersState] = useState(() => load());
@@ -38,21 +45,22 @@ function App() {
   return (
     <>
       <CookieBanner />
+      <a href="#main-content" className="govuk-skip-link">Skip to main content</a>
       <GovukHeader />
       <PhaseBanner phase="alpha" feedbackHref="#" />
       <div className="govuk-width-container">
-        <main className="govuk-main-wrapper" role="main">
+        <main className="govuk-main-wrapper" id="main-content" role="main" tabIndex={-1}>
           <Routes>
             <Route path="/" element={<StartPage answers={answers} onAnswer={handleAnswer} />} />
             <Route path="/prior-grants" element={<PriorGrantsPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/property-type" element={<PropertyTypePage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/ownership" element={<OwnershipPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/consent" element={<ConsentPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/income" element={<IncomePage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/insulation" element={<InsulationPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/heating" element={<HeatingPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/check-answers" element={<CheckAnswersPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/result" element={<ResultPage answers={answers} onAnswer={handleAnswer} onReset={handleReset} />} />
+            <Route path="/property-type" element={<Guard route="/property-type" answers={answers}><PropertyTypePage answers={answers} onAnswer={handleAnswer} /></Guard>} />
+            <Route path="/ownership" element={<Guard route="/ownership" answers={answers}><OwnershipPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
+            <Route path="/consent" element={<Guard route="/consent" answers={answers}><ConsentPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
+            <Route path="/income" element={<Guard route="/income" answers={answers}><IncomePage answers={answers} onAnswer={handleAnswer} /></Guard>} />
+            <Route path="/insulation" element={<Guard route="/insulation" answers={answers}><InsulationPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
+            <Route path="/heating" element={<Guard route="/heating" answers={answers}><HeatingPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
+            <Route path="/check-answers" element={<Guard route="/check-answers" answers={answers}><CheckAnswersPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
+            <Route path="/result" element={<Guard route="/result" answers={answers}><ResultPage answers={answers} onAnswer={handleAnswer} onReset={handleReset} /></Guard>} />
             <Route path="/accessibility-statement" element={<AccessibilityStatementPage />} />
           </Routes>
         </main>
