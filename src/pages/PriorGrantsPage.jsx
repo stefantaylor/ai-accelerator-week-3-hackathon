@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import CheckboxGroup from '../components/CheckboxGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
-import { nextRoute, firstIncompleteRoute, isJourneyComplete } from '../flow/journey.js';
+import { continueRoute, firstIncompleteRoute, isJourneyComplete } from '../flow/journey.js';
 
 export default function PriorGrantsPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
   // Set document title
@@ -29,7 +30,7 @@ export default function PriorGrantsPage({ answers, onAnswer }) {
     if (answers.priorGrants.includes('insulation') && answers.priorGrants.includes('heatPump')) {
       navigate('/result');
     } else {
-      navigate(nextRoute('/prior-grants', answers));
+      navigate(continueRoute('/prior-grants', answers, searchParams.get('change') === 'true'));
     }
   };
 

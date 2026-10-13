@@ -110,6 +110,19 @@ export function nextRoute(current, answers) {
   return required[currentIndex + 1];
 }
 
+// Get the route after Continue, returning to check answers when changing an answer
+export function continueRoute(current, answers, isChange) {
+  if (!isChange) return nextRoute(current, answers);
+
+  if (getRequiredRoutes(answers).includes('/check-answers') && isJourneyComplete(answers)) {
+    return '/check-answers';
+  }
+
+  // The change opened up a new question - ask it, then come back
+  const next = nextRoute(current, answers);
+  return next === '/result' ? next : `${next}?change=true`;
+}
+
 // Get the back route (handles consent conditional)
 export function backRoute(current, answers) {
   const { ownership = '' } = answers;

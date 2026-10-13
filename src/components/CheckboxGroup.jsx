@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 export default function CheckboxGroup({
   name,
   legend,
@@ -42,7 +44,7 @@ export default function CheckboxGroup({
       {error && <p className="govuk-error-message"><span className="govuk-visually-hidden">Error:</span> {error}</p>}
       <div className="govuk-checkboxes" data-module="govuk-checkboxes">
         {options.map((option, idx) => (
-          <div key={option.value}>
+          <Fragment key={option.value}>
             {dividerBefore && dividerBefore.includes(idx) && (
               <div className="govuk-checkboxes__divider">{dividerLabel}</div>
             )}
@@ -60,7 +62,7 @@ export default function CheckboxGroup({
                 {option.label}
               </label>
             </div>
-          </div>
+          </Fragment>
         ))}
       </div>
     </fieldset>

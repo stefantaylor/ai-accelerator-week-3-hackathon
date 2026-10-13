@@ -4,7 +4,7 @@ import { getLabel, getReasonText } from '../content/labels.js';
 import { backRouteWithEarlyExit } from '../flow/journey.js';
 import GovukButton from '../components/GovukButton';
 
-function ResultPage({ answers, onAnswer }) {
+function ResultPage({ answers, onAnswer, onReset }) {
   const navigate = useNavigate();
   document.title = 'Result - Check if you can get a Green Home Grant - GOV.UK';
 
@@ -65,7 +65,7 @@ function ResultPage({ answers, onAnswer }) {
         If you are eligible, you can apply for a Green Home Grant using the official application process.
       </p>
 
-      <GovukButton onClick={() => navigate('/prior-grants')}>Start again</GovukButton>
+      <GovukButton onClick={() => { onReset(); navigate('/prior-grants'); }}>Start again</GovukButton>
     </>
   );
 }

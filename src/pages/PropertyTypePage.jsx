@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import RadioGroup from '../components/RadioGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
-import { nextRoute, backRoute } from '../flow/journey.js';
+import { continueRoute, backRoute } from '../flow/journey.js';
 
 function PropertyTypePage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
   document.title = `${errors.length ? 'Error: ' : ''}What type of property do you live in? - Check if you can get a Green Home Grant - GOV.UK`;
@@ -21,7 +22,7 @@ function PropertyTypePage({ answers, onAnswer }) {
 
     setErrors([]);
     onAnswer('propertyType', answers.propertyType);
-    navigate(nextRoute('/property-type', answers));
+    navigate(continueRoute('/property-type', answers, searchParams.get('change') === 'true'));
   };
 
   const handleBack = () => {

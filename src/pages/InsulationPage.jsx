@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import CheckboxGroup from '../components/CheckboxGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
-import { nextRoute, backRoute } from '../flow/journey.js';
+import { continueRoute, backRoute } from '../flow/journey.js';
 
 function InsulationPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
   document.title = `${errors.length ? 'Error: ' : ''}Which parts of your property are not insulated? - Check if you can get a Green Home Grant - GOV.UK`;
@@ -21,7 +22,7 @@ function InsulationPage({ answers, onAnswer }) {
 
     setErrors([]);
     onAnswer('uninsulatedParts', answers.uninsulatedParts);
-    navigate(nextRoute('/insulation', answers));
+    navigate(continueRoute('/insulation', answers, searchParams.get('change') === 'true'));
   };
 
   const handleBack = () => {

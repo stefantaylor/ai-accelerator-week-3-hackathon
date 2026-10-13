@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import RadioGroup from '../components/RadioGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
-import { nextRoute, backRoute } from '../flow/journey.js';
+import { continueRoute, backRoute } from '../flow/journey.js';
 
 export default function ConsentPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
   const isSharedOwnership = answers.ownership === 'sharedOwnership';
@@ -33,7 +34,7 @@ export default function ConsentPage({ answers, onAnswer }) {
 
     setErrors([]);
     onAnswer('consent', answers.consent);
-    navigate(nextRoute('/consent', answers));
+    navigate(continueRoute('/consent', answers, searchParams.get('change') === 'true'));
   };
 
   const handleBack = () => {
