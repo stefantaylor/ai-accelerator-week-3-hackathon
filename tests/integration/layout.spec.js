@@ -82,3 +82,51 @@ test.describe('Route guards', () => {
     await expect(page.getByText('null%')).toHaveCount(0);
   });
 });
+
+test.describe('Moving between pages', () => {
+  test('focus moves to the main content after Continue', async ({ page }) => {
+    await page.goto('/prior-grants');
+    await page.getByRole('checkbox', { name: 'No, I have not received a Green Home Grant', exact: true }).check();
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
+
+    await expect(page.getByRole('heading', { level: 1, name: 'What type of property do you live in?' })).toBeVisible();
+    await expect(page.locator('main')).toBeFocused();
+  });
+
+  test('pressing Enter on a radio submits the question', async ({ page }) => {
+    await page.goto('/prior-grants');
+    await page.getByRole('checkbox', { name: 'No, I have not received a Green Home Grant', exact: true }).check();
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
+
+    const radio = page.getByRole('radio', { name: 'Flat', exact: true });
+    await radio.check();
+    await radio.press('Enter');
+    await expect(page.getByRole('heading', { level: 1, name: 'Do you own or rent your property?' })).toBeVisible();
+  });
+
+  test('Back link is a real link to the previous page', async ({ page }) => {
+    await page.goto('/prior-grants');
+    await page.getByRole('checkbox', { name: 'No, I have not received a Green Home Grant', exact: true }).check();
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
+
+    await expect(page.getByRole('link', { name: 'Back', exact: true })).toHaveAttribute('href', '/prior-grants');
+  });
+
+  test('unknown address shows the Page not found page', async ({ page }) => {
+    await page.goto('/no-such-page');
+    await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
+    await expect(page).toHaveTitle('Page not found - Check if you can get a Green Home Grant - GOV.UK');
+
+    await page.getByRole('link', { name: 'Go to the start of the service', exact: true }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'Check if you can get a Green Home Grant' })).toBeVisible();
+  });
+});
+
+test.describe('Header', () => {
+  test('shows the service name linking to the start page', async ({ page }) => {
+    await page.goto('/prior-grants');
+    const banner = page.getByRole('banner');
+    await banner.getByRole('link', { name: 'Check if you can get a Green Home Grant', exact: true }).click();
+    await expect(page).toHaveURL(/\/$/);
+  });
+});

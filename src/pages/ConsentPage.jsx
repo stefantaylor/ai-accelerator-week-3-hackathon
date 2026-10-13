@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RadioGroup from '../components/RadioGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
-import { isAnswered } from '../state/answers.js';
+import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
-import { useLanguage } from '../content/language.jsx';
 import { continueRoute, backRoute } from '../flow/journey.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
+import { useLanguage } from '../content/language.jsx';
+
+const FIELD = 'consent';
+const ROUTE = '/consent';
 
 export default function ConsentPage({ answers, onAnswer }) {
   const navigate = useNavigate();
@@ -15,52 +19,42 @@ export default function ConsentPage({ answers, onAnswer }) {
   const [errors, setErrors] = useState([]);
 
   const isSharedOwnership = answers.ownership === 'sharedOwnership';
-  const legend = t(isSharedOwnership ? 'consent.sharedQuestion' : 'consent.rentQuestion');
+  const question = t(isSharedOwnership ? 'consent.sharedQuestion' : 'consent.rentQuestion');
   const errorKey = isSharedOwnership ? 'consent.sharedError' : 'consent.rentError';
+  const hasError = errors.length > 0;
+  usePageTitle(question, hasError);
 
-  // Set document title
-  const hasErrors = errors.length > 0;
-  document.title = `${hasErrors ? `${t('errorPrefix')} ` : ''}${legend} - ${t('titleSuffix')}`;
+  const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value, lang) }));
 
-  const handleContinue = () => {
-    // Validate
-    if (!isAnswered('consent', answers.consent)) {
-      setErrors([{ fieldId: 'consent', messageKey: errorKey }]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isAnswered(FIELD, answers[FIELD])) {
+      setErrors([{ fieldId: FIELD, messageKey: errorKey }]);
       return;
     }
 
     setErrors([]);
-    onAnswer('consent', answers.consent);
-    navigate(continueRoute('/consent', answers, searchParams.get('change') === 'true'));
+    navigate(continueRoute(ROUTE, answers, searchParams.get('change') === 'true'));
   };
-
-  const handleBack = () => {
-    navigate(backRoute('/consent', answers));
-  };
-
-  const options = [
-    { value: 'yes', label: getLabel('consent', 'yes', lang) },
-    { value: 'no', label: getLabel('consent', 'no', lang) },
-  ];
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        {t('back')}
-      </a>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">{t('back')}</Link>
 
       <ErrorSummary errors={errors} />
 
-      <RadioGroup
-        name="consent"
-        legend={legend}
-        options={options}
-        value={answers.consent}
-        onChange={(value) => onAnswer('consent', value)}
-        error={hasErrors ? t(errorKey) : undefined}
-      />
+      <form onSubmit={handleSubmit} noValidate>
+        <RadioGroup
+          name={FIELD}
+          legend={question}
+          options={options}
+          value={answers[FIELD]}
+          onChange={(value) => onAnswer(FIELD, value)}
+          error={hasError ? t(errorKey) : undefined}
+        />
 
-      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
+        <GovukButton type="submit">{t('continue')}</GovukButton>
+      </form>
     </>
   );
 }

@@ -1,132 +1,91 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getLabel } from '../content/labels.js';
 import { backRoute } from '../flow/journey.js';
 import GovukButton from '../components/GovukButton';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 import { useLanguage } from '../content/language.jsx';
 
-function CheckAnswersPage({ answers, onAnswer }) {
+function SummaryRow({ label, value, changeRoute, hiddenText }) {
+  const { t } = useLanguage();
+
+  return (
+    <div className="govuk-summary-list__row">
+      <dt className="govuk-summary-list__key">{label}</dt>
+      <dd className="govuk-summary-list__value">{value}</dd>
+      <dd className="govuk-summary-list__actions">
+        <Link className="govuk-link" to={`${changeRoute}?change=true`}>
+          {t('change')}<span className="govuk-visually-hidden"> {hiddenText}</span>
+        </Link>
+      </dd>
+    </div>
+  );
+}
+
+function CheckAnswersPage({ answers }) {
   const navigate = useNavigate();
   const { lang, t } = useLanguage();
-  document.title = `${t('checkAnswers.title')} - ${t('titleSuffix')}`;
+  usePageTitle(t('checkAnswers.title'));
 
-  const handleBack = () => {
-    navigate(backRoute('/check-answers', answers));
-  };
+  const consentRequired = answers.ownership === 'sharedOwnership' || answers.ownership === 'rent';
 
-  const handleChange = (route) => {
-    navigate(`${route}?change=true`);
-  };
-
-  const handleContinue = () => {
-    navigate('/result');
-  };
+  const priorGrantsValue = answers.priorGrants.includes('none')
+    ? getLabel('priorGrants', 'none', lang)
+    : answers.priorGrants.map(grant => getLabel('priorGrants', grant, lang)).join(', ');
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        {t('back')}
-      </a>
+      <Link to={backRoute('/check-answers', answers)} className="govuk-back-link">{t('back')}</Link>
 
       <h1 className="govuk-heading-l">{t('checkAnswers.title')}</h1>
 
       <dl className="govuk-summary-list">
-        {/* Prior Grants */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">{t('checkAnswers.priorGrants')}</dt>
-          <dd className="govuk-summary-list__value">
-            {answers.priorGrants.length === 0 ? (
-              <span>{t('checkAnswers.noGrants')}</span>
-            ) : answers.priorGrants.includes('none') ? (
-              <span>{getLabel('priorGrants', 'none', lang)}</span>
-            ) : (
-              <span>{answers.priorGrants.map(grant => getLabel('priorGrants', grant, lang)).join(', ')}</span>
-            )}
-          </dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/prior-grants'); }}>
-              {t('change')}<span className="govuk-visually-hidden"> {t('checkAnswers.priorGrantsHidden')}</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Property Type */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">{t('checkAnswers.propertyType')}</dt>
-          <dd className="govuk-summary-list__value">{getLabel('propertyType', answers.propertyType, lang)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/property-type'); }}>
-              {t('change')}<span className="govuk-visually-hidden"> {t('checkAnswers.propertyTypeHidden')}</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Ownership */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">{t('checkAnswers.ownership')}</dt>
-          <dd className="govuk-summary-list__value">{getLabel('ownership', answers.ownership, lang)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/ownership'); }}>
-              {t('change')}<span className="govuk-visually-hidden"> {t('checkAnswers.ownershipHidden')}</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Consent (conditional) */}
-        {(answers.ownership === 'sharedOwnership' || answers.ownership === 'rent') && (
-          <div className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">
-              {t(answers.ownership === 'sharedOwnership' ? 'checkAnswers.sharedConsent' : 'checkAnswers.rentConsent')}
-            </dt>
-            <dd className="govuk-summary-list__value">{getLabel('consent', answers.consent, lang)}</dd>
-            <dd className="govuk-summary-list__actions">
-              <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/consent'); }}>
-                {t('change')}<span className="govuk-visually-hidden"> {t('checkAnswers.consentHidden')}</span>
-              </a>
-            </dd>
-          </div>
+        <SummaryRow
+          label={t('checkAnswers.priorGrants')}
+          value={priorGrantsValue}
+          changeRoute="/prior-grants"
+          hiddenText={t('checkAnswers.priorGrantsHidden')}
+        />
+        <SummaryRow
+          label={t('checkAnswers.propertyType')}
+          value={getLabel('propertyType', answers.propertyType, lang)}
+          changeRoute="/property-type"
+          hiddenText={t('checkAnswers.propertyTypeHidden')}
+        />
+        <SummaryRow
+          label={t('checkAnswers.ownership')}
+          value={getLabel('ownership', answers.ownership, lang)}
+          changeRoute="/ownership"
+          hiddenText={t('checkAnswers.ownershipHidden')}
+        />
+        {consentRequired && (
+          <SummaryRow
+            label={t(answers.ownership === 'sharedOwnership' ? 'checkAnswers.sharedConsent' : 'checkAnswers.rentConsent')}
+            value={getLabel('consent', answers.consent, lang)}
+            changeRoute="/consent"
+            hiddenText={t('checkAnswers.consentHidden')}
+          />
         )}
-
-        {/* Income */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">{t('checkAnswers.income')}</dt>
-          <dd className="govuk-summary-list__value">{getLabel('incomeBand', answers.incomeBand, lang)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/income'); }}>
-              {t('change')}<span className="govuk-visually-hidden"> {t('checkAnswers.incomeHidden')}</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Uninsulated parts */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">{t('checkAnswers.uninsulatedParts')}</dt>
-          <dd className="govuk-summary-list__value">
-            {answers.uninsulatedParts.length === 0 ? (
-              <span>{t('checkAnswers.notAnswered')}</span>
-            ) : (
-              <span>{answers.uninsulatedParts.map(part => getLabel('uninsulatedParts', part, lang)).join(', ')}</span>
-            )}
-          </dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/insulation'); }}>
-              {t('change')}<span className="govuk-visually-hidden"> {t('checkAnswers.uninsulatedPartsHidden')}</span>
-            </a>
-          </dd>
-        </div>
-
-        {/* Heating */}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">{t('checkAnswers.heating')}</dt>
-          <dd className="govuk-summary-list__value">{getLabel('heating', answers.heating, lang)}</dd>
-          <dd className="govuk-summary-list__actions">
-            <a className="govuk-link" href="#" onClick={(e) => { e.preventDefault(); handleChange('/heating'); }}>
-              {t('change')}<span className="govuk-visually-hidden"> {t('checkAnswers.heatingHidden')}</span>
-            </a>
-          </dd>
-        </div>
+        <SummaryRow
+          label={t('checkAnswers.income')}
+          value={getLabel('incomeBand', answers.incomeBand, lang)}
+          changeRoute="/income"
+          hiddenText={t('checkAnswers.incomeHidden')}
+        />
+        <SummaryRow
+          label={t('checkAnswers.uninsulatedParts')}
+          value={answers.uninsulatedParts.map(part => getLabel('uninsulatedParts', part, lang)).join(', ')}
+          changeRoute="/insulation"
+          hiddenText={t('checkAnswers.uninsulatedPartsHidden')}
+        />
+        <SummaryRow
+          label={t('checkAnswers.heating')}
+          value={getLabel('heating', answers.heating, lang)}
+          changeRoute="/heating"
+          hiddenText={t('checkAnswers.heatingHidden')}
+        />
       </dl>
 
-      <GovukButton onClick={handleContinue}>{t('checkAnswers.submit')}</GovukButton>
+      <GovukButton onClick={() => navigate('/result')}>{t('checkAnswers.submit')}</GovukButton>
     </>
   );
 }

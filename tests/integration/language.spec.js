@@ -43,6 +43,13 @@ test.describe('Welsh language', () => {
     await expect(page).toHaveTitle(/^Gwall: /);
   });
 
+  test('header and Page not found are in Welsh', async ({ page }) => {
+    await page.goto('/no-such-page?lang=cy');
+    await expect(page.getByRole('banner').getByRole('link', { name: 'Gwirio a allwch gael Grant Cartref Gwyrdd' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Heb ddod o hyd i’r dudalen' })).toBeVisible();
+    await expect(page).toHaveTitle('Heb ddod o hyd i’r dudalen - Gwirio a allwch gael Grant Cartref Gwyrdd - GOV.UK');
+  });
+
   test('choice is remembered across pages and can be switched back', async ({ page }) => {
     await page.goto('/?lang=cy');
     await page.getByRole('button', { name: 'Dechrau nawr' }).click();

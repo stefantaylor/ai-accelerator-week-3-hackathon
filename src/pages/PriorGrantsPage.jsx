@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import CheckboxGroup from '../components/CheckboxGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
-import { isAnswered } from '../state/answers.js';
+import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
+import { continueRoute } from '../flow/journey.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 import { useLanguage } from '../content/language.jsx';
-import { continueRoute, firstIncompleteRoute, isJourneyComplete } from '../flow/journey.js';
+
+const FIELD = 'priorGrants';
+const ROUTE = '/prior-grants';
 
 export default function PriorGrantsPage({ answers, onAnswer }) {
   const navigate = useNavigate();
@@ -14,63 +18,45 @@ export default function PriorGrantsPage({ answers, onAnswer }) {
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  // Set document title
-  const hasErrors = errors.length > 0;
-  document.title = `${hasErrors ? `${t('errorPrefix')} ` : ''}${t('priorGrants.question')} - ${t('titleSuffix')}`;
+  const hasError = errors.length > 0;
+  const question = t('priorGrants.question');
+  usePageTitle(question, hasError);
 
-  const handleContinue = () => {
-    // Validate
-    if (!isAnswered('priorGrants', answers.priorGrants)) {
-      setErrors([{ fieldId: 'priorGrants', messageKey: 'priorGrants.error' }]);
+  const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value, lang) }));
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isAnswered(FIELD, answers[FIELD])) {
+      setErrors([{ fieldId: FIELD, messageKey: 'priorGrants.error' }]);
       return;
     }
 
     setErrors([]);
-    onAnswer('priorGrants', answers.priorGrants);
-
-    // Check for early exit: both grants already received
-    if (answers.priorGrants.includes('insulation') && answers.priorGrants.includes('heatPump')) {
-      navigate('/result');
-    } else {
-      navigate(continueRoute('/prior-grants', answers, searchParams.get('change') === 'true'));
-    }
+    // continueRoute goes straight to /result when both grants were already received
+    navigate(continueRoute(ROUTE, answers, searchParams.get('change') === 'true'));
   };
-
-  const handleBack = () => {
-    navigate('/');
-  };
-
-  const handleCheckboxChange = (values) => {
-    onAnswer('priorGrants', values);
-  };
-
-  const options = [
-    { value: 'insulation', label: getLabel('priorGrants', 'insulation', lang) },
-    { value: 'heatPump', label: getLabel('priorGrants', 'heatPump', lang) },
-    { value: 'none', label: getLabel('priorGrants', 'none', lang) },
-  ];
 
   return (
     <>
-      <a href="/" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        {t('back')}
-      </a>
+      <Link to="/" className="govuk-back-link">{t('back')}</Link>
 
       <ErrorSummary errors={errors} />
 
-      <CheckboxGroup
-        name="priorGrants"
-        legend={t('priorGrants.question')}
-        hint={t('selectAllThatApply')}
-        options={options}
-        value={answers.priorGrants}
-        onChange={handleCheckboxChange}
-        error={hasErrors ? t('priorGrants.error') : undefined}
-        exclusive={['none']}
-        dividerBefore={[2]}
-      />
+      <form onSubmit={handleSubmit} noValidate>
+        <CheckboxGroup
+          name={FIELD}
+          legend={question}
+          hint={t('selectAllThatApply')}
+          options={options}
+          value={answers[FIELD]}
+          onChange={(values) => onAnswer(FIELD, values)}
+          error={hasError ? t('priorGrants.error') : undefined}
+          exclusive={['none']}
+          dividerBefore={[2]}
+        />
 
-      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
+        <GovukButton type="submit">{t('continue')}</GovukButton>
+      </form>
     </>
   );
 }

@@ -2,19 +2,6 @@
 
 import { isAnswered } from '../state/answers.js';
 
-// All question routes in order
-const ROUTES = [
-  '/prior-grants',
-  '/property-type',
-  '/ownership',
-  '/consent',
-  '/income',
-  '/insulation',
-  '/heating',
-  '/check-answers',
-  '/result',
-];
-
 // Routes that are always required
 const ALWAYS_REQUIRED = ['/prior-grants'];
 

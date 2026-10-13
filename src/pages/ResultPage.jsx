@@ -1,26 +1,26 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { assessEligibility } from '../eligibility/assessEligibility.js';
 import { getLabel, getReasonText } from '../content/labels.js';
 import { backRouteWithEarlyExit } from '../flow/journey.js';
 import GovukButton from '../components/GovukButton';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 import { useLanguage } from '../content/language.jsx';
 
-function ResultPage({ answers, onAnswer, onReset }) {
+function ResultPage({ answers, onReset }) {
   const navigate = useNavigate();
   const { lang, t } = useLanguage();
-  document.title = `${t('result.title')} - ${t('titleSuffix')}`;
+  usePageTitle(t('result.title'));
 
   const result = assessEligibility(answers);
 
-  const handleBack = () => {
-    navigate(backRouteWithEarlyExit('/result', answers));
+  const handleStartAgain = () => {
+    onReset();
+    navigate('/prior-grants');
   };
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        {t('back')}
-      </a>
+      <Link to={backRouteWithEarlyExit('/result', answers)} className="govuk-back-link">{t('back')}</Link>
 
       {result.overallEligible ? (
         <div className="govuk-panel">
@@ -65,7 +65,7 @@ function ResultPage({ answers, onAnswer, onReset }) {
       <p className="govuk-body">{t('result.nextNotApplication')}</p>
       <p className="govuk-body">{t('result.nextApply')}</p>
 
-      <GovukButton onClick={() => { onReset(); navigate('/prior-grants'); }}>{t('result.startAgain')}</GovukButton>
+      <GovukButton onClick={handleStartAgain}>{t('result.startAgain')}</GovukButton>
     </>
   );
 }

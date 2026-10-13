@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import CookieBanner from './components/CookieBanner';
 import GovukHeader from './components/GovukHeader';
 import PhaseBanner from './components/PhaseBanner';
@@ -9,6 +9,7 @@ import { useLanguage } from './content/language.jsx';
 import { emptyAnswers, setAnswer } from './state/answers.js';
 import { load, save } from './state/answersStore.js';
 import { guardRedirect } from './flow/journey.js';
+import { contactEmail } from './content/labels.js';
 import StartPage from './pages/StartPage';
 import PriorGrantsPage from './pages/PriorGrantsPage';
 import PropertyTypePage from './pages/PropertyTypePage';
@@ -20,6 +21,18 @@ import HeatingPage from './pages/HeatingPage';
 import CheckAnswersPage from './pages/CheckAnswersPage';
 import ResultPage from './pages/ResultPage';
 import AccessibilityStatementPage from './pages/AccessibilityStatementPage';
+import NotFoundPage from './pages/NotFoundPage';
+
+// Question pages in journey order. Every route after /prior-grants is guarded.
+const QUESTION_PAGES = [
+  ['/property-type', PropertyTypePage],
+  ['/ownership', OwnershipPage],
+  ['/consent', ConsentPage],
+  ['/income', IncomePage],
+  ['/insulation', InsulationPage],
+  ['/heating', HeatingPage],
+  ['/check-answers', CheckAnswersPage],
+];
 
 // Sends the user to the first unanswered question if they skip ahead
 function Guard({ route, answers, children }) {
@@ -30,15 +43,27 @@ function Guard({ route, answers, children }) {
 function App() {
   const { t } = useLanguage();
   const [answers, setAnswersState] = useState(() => load());
+  const location = useLocation();
+  const mainRef = useRef(null);
+  const previousPath = useRef(location.pathname);
 
   // Save to storage whenever answers change
   useEffect(() => {
     save(answers);
   }, [answers]);
 
+  // This is a single-page app, so moving between pages does not reset focus.
+  // Move focus to the main content on each new page so screen reader users
+  // hear the new question. Not on first load, where the browser does this.
+  useEffect(() => {
+    if (location.pathname !== previousPath.current) {
+      previousPath.current = location.pathname;
+      mainRef.current?.focus();
+    }
+  }, [location.pathname]);
+
   const handleAnswer = (field, value) => {
-    const updated = setAnswer(answers, field, value);
-    setAnswersState(updated);
+    setAnswersState(setAnswer(answers, field, value));
   };
 
   const handleReset = () => {
@@ -50,22 +75,34 @@ function App() {
       <CookieBanner />
       <a href="#main-content" className="govuk-skip-link">{t('skipLink')}</a>
       <GovukHeader />
-      <PhaseBanner feedbackHref="#" />
+      <PhaseBanner feedbackHref={`mailto:${contactEmail}`} />
       <div className="govuk-width-container">
         <LanguageSelect />
-        <main className="govuk-main-wrapper" id="main-content" role="main" tabIndex={-1}>
+        <main className="govuk-main-wrapper" id="main-content" ref={mainRef} tabIndex={-1}>
           <Routes>
-            <Route path="/" element={<StartPage answers={answers} onAnswer={handleAnswer} />} />
+            <Route path="/" element={<StartPage />} />
             <Route path="/prior-grants" element={<PriorGrantsPage answers={answers} onAnswer={handleAnswer} />} />
-            <Route path="/property-type" element={<Guard route="/property-type" answers={answers}><PropertyTypePage answers={answers} onAnswer={handleAnswer} /></Guard>} />
-            <Route path="/ownership" element={<Guard route="/ownership" answers={answers}><OwnershipPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
-            <Route path="/consent" element={<Guard route="/consent" answers={answers}><ConsentPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
-            <Route path="/income" element={<Guard route="/income" answers={answers}><IncomePage answers={answers} onAnswer={handleAnswer} /></Guard>} />
-            <Route path="/insulation" element={<Guard route="/insulation" answers={answers}><InsulationPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
-            <Route path="/heating" element={<Guard route="/heating" answers={answers}><HeatingPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
-            <Route path="/check-answers" element={<Guard route="/check-answers" answers={answers}><CheckAnswersPage answers={answers} onAnswer={handleAnswer} /></Guard>} />
-            <Route path="/result" element={<Guard route="/result" answers={answers}><ResultPage answers={answers} onAnswer={handleAnswer} onReset={handleReset} /></Guard>} />
+            {QUESTION_PAGES.map(([path, Page]) => (
+              <Route
+                key={path}
+                path={path}
+                element={(
+                  <Guard route={path} answers={answers}>
+                    <Page answers={answers} onAnswer={handleAnswer} />
+                  </Guard>
+                )}
+              />
+            ))}
+            <Route
+              path="/result"
+              element={(
+                <Guard route="/result" answers={answers}>
+                  <ResultPage answers={answers} onReset={handleReset} />
+                </Guard>
+              )}
+            />
             <Route path="/accessibility-statement" element={<AccessibilityStatementPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
       </div>

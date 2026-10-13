@@ -1,8 +1,10 @@
+import { contactEmail, contactPhone } from '../content/labels.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 import { useLanguage } from '../content/language.jsx';
 
 export default function AccessibilityStatementPage() {
   const { t } = useLanguage();
-  document.title = `${t('accessibility.title')} - ${t('titleSuffix')}`;
+  usePageTitle(t('accessibility.title'));
 
   return (
     <>
@@ -19,9 +21,20 @@ export default function AccessibilityStatementPage() {
       <h2 className="govuk-heading-l">{t('accessibility.contactHeading')}</h2>
       <p className="govuk-body">{t('accessibility.contactIntro')}</p>
       <ul className="govuk-list">
-        <li>{t('accessibility.email')} <a href="mailto:support@example.gov.uk" className="govuk-link">support@example.gov.uk</a></li>
-        <li>{t('accessibility.phone')} 0123 456 7890</li>
+        <li>{t('accessibility.email')} <a href={`mailto:${contactEmail}`} className="govuk-link">{contactEmail}</a></li>
+        <li>{t('accessibility.phone')} {contactPhone}</li>
       </ul>
+
+      <h2 className="govuk-heading-l">{t('accessibility.reportingHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.reporting')}</p>
+
+      <h2 className="govuk-heading-l">{t('accessibility.enforcementHeading')}</h2>
+      <p className="govuk-body">
+        {t('accessibility.enforcement')}{' '}
+        <a href="https://www.equalityadvisoryservice.com/" className="govuk-link">
+          {t('accessibility.enforcementLink')}
+        </a>.
+      </p>
 
       <h2 className="govuk-heading-l">{t('accessibility.technicalHeading')}</h2>
       <p className="govuk-body">{t('accessibility.technicalIntro')}</p>
@@ -42,6 +55,9 @@ export default function AccessibilityStatementPage() {
 
       <h2 className="govuk-heading-l">{t('accessibility.improveHeading')}</h2>
       <p className="govuk-body">{t('accessibility.improve')}</p>
+
+      <h2 className="govuk-heading-l">{t('accessibility.preparationHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.preparation')}</p>
     </>
   );
 }

@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RadioGroup from '../components/RadioGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
-import { isAnswered } from '../state/answers.js';
+import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
-import { useLanguage } from '../content/language.jsx';
 import { continueRoute, backRoute } from '../flow/journey.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
+import { useLanguage } from '../content/language.jsx';
+
+const FIELD = 'propertyType';
+const ROUTE = '/property-type';
 
 function PropertyTypePage({ answers, onAnswer }) {
   const navigate = useNavigate();
@@ -15,49 +19,40 @@ function PropertyTypePage({ answers, onAnswer }) {
   const [errors, setErrors] = useState([]);
 
   const hasError = errors.length > 0;
-  document.title = `${hasError ? `${t('errorPrefix')} ` : ''}${t('propertyType.question')} - ${t('titleSuffix')}`;
+  const question = t('propertyType.question');
+  usePageTitle(question, hasError);
 
-  const handleContinue = () => {
-    if (!isAnswered('propertyType', answers.propertyType)) {
-      setErrors([{ fieldId: 'propertyType', messageKey: 'propertyType.error' }]);
+  const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value, lang) }));
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isAnswered(FIELD, answers[FIELD])) {
+      setErrors([{ fieldId: FIELD, messageKey: 'propertyType.error' }]);
       return;
     }
 
     setErrors([]);
-    onAnswer('propertyType', answers.propertyType);
-    navigate(continueRoute('/property-type', answers, searchParams.get('change') === 'true'));
+    navigate(continueRoute(ROUTE, answers, searchParams.get('change') === 'true'));
   };
-
-  const handleBack = () => {
-    navigate(backRoute('/property-type', answers));
-  };
-
-  const options = [
-    { value: 'detached', label: getLabel('propertyType', 'detached', lang) },
-    { value: 'semiDetached', label: getLabel('propertyType', 'semiDetached', lang) },
-    { value: 'terraced', label: getLabel('propertyType', 'terraced', lang) },
-    { value: 'flat', label: getLabel('propertyType', 'flat', lang) },
-    { value: 'bungalow', label: getLabel('propertyType', 'bungalow', lang) },
-  ];
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        {t('back')}
-      </a>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">{t('back')}</Link>
 
       <ErrorSummary errors={errors} />
 
-      <RadioGroup
-        name="propertyType"
-        legend={t('propertyType.question')}
-        options={options}
-        value={answers.propertyType}
-        onChange={(value) => onAnswer('propertyType', value)}
-        error={hasError ? t('propertyType.error') : undefined}
-      />
+      <form onSubmit={handleSubmit} noValidate>
+        <RadioGroup
+          name={FIELD}
+          legend={question}
+          options={options}
+          value={answers[FIELD]}
+          onChange={(value) => onAnswer(FIELD, value)}
+          error={hasError ? t('propertyType.error') : undefined}
+        />
 
-      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
+        <GovukButton type="submit">{t('continue')}</GovukButton>
+      </form>
     </>
   );
 }

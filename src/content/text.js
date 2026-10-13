@@ -9,7 +9,6 @@ const SERVICE_NAME = {
 export const text = {
   en: {
     serviceName: SERVICE_NAME.en,
-    titleSuffix: `${SERVICE_NAME.en} - GOV.UK`,
     errorPrefix: 'Error:',
     skipLink: 'Skip to main content',
     back: 'Back',
@@ -40,6 +39,7 @@ export const text = {
       accepted: 'You’ve accepted additional cookies.',
       rejected: 'You’ve rejected additional cookies.',
       hide: 'Hide cookie message',
+      view: 'View cookies',
     },
 
     start: {
@@ -82,7 +82,6 @@ export const text = {
       title: 'Check your answers',
       priorGrants: 'Green Home Grants received',
       priorGrantsHidden: 'grants received',
-      noGrants: 'No grants received',
       propertyType: 'Property type',
       propertyTypeHidden: 'property type',
       ownership: 'Ownership',
@@ -94,7 +93,6 @@ export const text = {
       incomeHidden: 'income',
       uninsulatedParts: 'Uninsulated parts',
       uninsulatedPartsHidden: 'uninsulated parts',
-      notAnswered: 'Not answered',
       heating: 'Heating system',
       heatingHidden: 'heating system',
       submit: 'Accept and continue',
@@ -117,6 +115,13 @@ export const text = {
       startAgain: 'Start again',
     },
 
+    notFound: {
+      title: 'Page not found',
+      typed: 'If you typed the web address, check it is correct.',
+      pasted: 'If you pasted the web address, check you copied the entire address.',
+      startLink: 'Go to the start of the service',
+    },
+
     accessibility: {
       title: 'Accessibility statement',
       appliesTo: 'This accessibility statement applies to the Green Home Grant Eligibility Checker (alpha prototype).',
@@ -128,7 +133,12 @@ export const text = {
       contactIntro: 'If you have difficulty using this service or need adjustments, please contact us:',
       email: 'Email:',
       phone: 'Phone:',
-      technicalHeading: 'Technical information',
+      reportingHeading: 'Reporting accessibility problems with this service',
+      reporting: 'We are always looking to improve the accessibility of this service. If you find any problems not listed on this page or think we are not meeting accessibility requirements, contact us using the details above.',
+      enforcementHeading: 'Enforcement procedure',
+      enforcement: 'The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you are not happy with how we respond to your complaint,',
+      enforcementLink: 'contact the Equality Advisory and Support Service (EASS)',
+      technicalHeading: 'Technical information about this service’s accessibility',
       technicalIntro: 'This service uses the following technologies:',
       react: 'React for user interface',
       sessionStorage: 'Browser sessionStorage for client-side data persistence',
@@ -139,8 +149,10 @@ export const text = {
       automated: 'Automated accessibility scanning with axe and Lighthouse',
       keyboard: 'Keyboard navigation testing',
       screenReader: 'Screen reader compatibility testing',
-      improveHeading: 'What we are doing to improve',
+      improveHeading: 'What we are doing to improve accessibility',
       improve: 'As this is an alpha prototype, we are actively working to improve accessibility and fix any identified issues.',
+      preparationHeading: 'Preparation of this accessibility statement',
+      preparation: 'This statement was prepared on 13 October 2026. The service was last tested on 13 October 2026 by the service team, using automated checks and manual keyboard testing.',
     },
 
     footer: {
@@ -191,7 +203,6 @@ export const text = {
 
   cy: {
     serviceName: SERVICE_NAME.cy,
-    titleSuffix: `${SERVICE_NAME.cy} - GOV.UK`,
     errorPrefix: 'Gwall:',
     skipLink: 'Neidio i’r prif gynnwys',
     back: 'Yn ôl',
@@ -222,6 +233,7 @@ export const text = {
       accepted: 'Rydych wedi derbyn cwcis ychwanegol.',
       rejected: 'Rydych wedi gwrthod cwcis ychwanegol.',
       hide: 'Cuddio’r neges cwcis',
+      view: 'Gweld cwcis',
     },
 
     start: {
@@ -265,7 +277,6 @@ export const text = {
       title: 'Gwirio eich atebion',
       priorGrants: 'Grantiau Cartref Gwyrdd a gafwyd',
       priorGrantsHidden: 'grantiau a gafwyd',
-      noGrants: 'Dim grantiau wedi’u cael',
       propertyType: 'Math o eiddo',
       propertyTypeHidden: 'math o eiddo',
       ownership: 'Perchnogaeth',
@@ -277,7 +288,6 @@ export const text = {
       incomeHidden: 'incwm',
       uninsulatedParts: 'Rhannau heb eu hinswleiddio',
       uninsulatedPartsHidden: 'rhannau heb eu hinswleiddio',
-      notAnswered: 'Heb ateb',
       heating: 'System wresogi',
       heatingHidden: 'system wresogi',
       submit: 'Derbyn a pharhau',
@@ -300,6 +310,13 @@ export const text = {
       startAgain: 'Dechrau eto',
     },
 
+    notFound: {
+      title: 'Heb ddod o hyd i’r dudalen',
+      typed: 'Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.',
+      pasted: 'Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad cyfan.',
+      startLink: 'Ewch i ddechrau’r gwasanaeth',
+    },
+
     accessibility: {
       title: 'Datganiad hygyrchedd',
       appliesTo: 'Mae’r datganiad hygyrchedd hwn yn berthnasol i’r Gwiriwr Cymhwysedd ar gyfer Grant Cartref Gwyrdd (prototeip alffa).',
@@ -311,7 +328,12 @@ export const text = {
       contactIntro: 'Os ydych yn cael anhawster defnyddio’r gwasanaeth hwn neu os oes angen addasiadau arnoch, cysylltwch â ni:',
       email: 'E-bost:',
       phone: 'Ffôn:',
-      technicalHeading: 'Gwybodaeth dechnegol',
+      reportingHeading: 'Rhoi gwybod am broblemau hygyrchedd gyda’r gwasanaeth hwn',
+      reporting: 'Rydym bob amser yn ceisio gwella hygyrchedd y gwasanaeth hwn. Os byddwch yn dod o hyd i unrhyw broblemau nad ydynt wedi’u rhestru ar y dudalen hon, neu os ydych yn credu nad ydym yn bodloni gofynion hygyrchedd, cysylltwch â ni gan ddefnyddio’r manylion uchod.',
+      enforcementHeading: 'Y weithdrefn orfodi',
+      enforcement: 'Y Comisiwn Cydraddoldeb a Hawliau Dynol (EHRC) sy’n gyfrifol am orfodi Rheoliadau Hygyrchedd Cyrff Sector Cyhoeddus (Gwefannau a Rhaglenni Symudol) (Rhif 2) 2018 (y ‘rheoliadau hygyrchedd’). Os nad ydych yn hapus gyda’r ffordd rydym yn ymateb i’ch cwyn,',
+      enforcementLink: 'cysylltwch â’r Gwasanaeth Cynghori a Chymorth Cydraddoldeb (EASS)',
+      technicalHeading: 'Gwybodaeth dechnegol am hygyrchedd y gwasanaeth hwn',
       technicalIntro: 'Mae’r gwasanaeth hwn yn defnyddio’r technolegau canlynol:',
       react: 'React ar gyfer y rhyngwyneb defnyddiwr',
       sessionStorage: 'sessionStorage y porwr ar gyfer storio data ar ochr y cleient',
@@ -322,8 +344,10 @@ export const text = {
       automated: 'Sganio hygyrchedd awtomataidd gydag axe a Lighthouse',
       keyboard: 'Profi llywio gyda bysellfwrdd',
       screenReader: 'Profi cydnawsedd â darllenwyr sgrin',
-      improveHeading: 'Beth rydym yn ei wneud i wella',
+      improveHeading: 'Beth rydym yn ei wneud i wella hygyrchedd',
       improve: 'Gan mai prototeip alffa yw hwn, rydym wrthi’n gweithio i wella hygyrchedd ac i drwsio unrhyw broblemau a nodwyd.',
+      preparationHeading: 'Paratoi’r datganiad hygyrchedd hwn',
+      preparation: 'Cafodd y datganiad hwn ei baratoi ar 13 Hydref 2026. Cafodd y gwasanaeth ei brofi ddiwethaf ar 13 Hydref 2026 gan dîm y gwasanaeth, gan ddefnyddio gwiriadau awtomataidd a phrofion bysellfwrdd â llaw.',
     },
 
     footer: {

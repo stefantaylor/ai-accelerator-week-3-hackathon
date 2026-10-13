@@ -52,7 +52,7 @@ describe('journey.js', () => {
       expect(nextRoute('/ownership', answers)).toBe('/consent');
     });
 
-    it('returns /result for unknown route', () => {
+    it('returns /prior-grants for unknown route', () => {
       expect(nextRoute('/unknown', emptyAnswers)).toBe('/prior-grants');
     });
   });

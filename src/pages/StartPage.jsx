@@ -1,15 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import GovukButton from '../components/GovukButton';
+import { usePageTitle } from '../hooks/usePageTitle.js';
 import { useLanguage } from '../content/language.jsx';
 
-function StartPage({ answers, onAnswer }) {
+function StartPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  document.title = t('titleSuffix');
-
-  const handleStart = () => {
-    navigate('/prior-grants');
-  };
+  usePageTitle('');
 
   return (
     <>
@@ -19,7 +16,7 @@ function StartPage({ answers, onAnswer }) {
       <p className="govuk-body-l">
         {t('start.intro')}
       </p>
-      <GovukButton variant="start" onClick={handleStart}>
+      <GovukButton variant="start" onClick={() => navigate('/prior-grants')}>
         {t('start.button')}
       </GovukButton>
     </>

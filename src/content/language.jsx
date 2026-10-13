@@ -11,7 +11,7 @@ function loadLanguage() {
     if (LANGUAGES.includes(fromUrl)) return fromUrl;
     const stored = window.sessionStorage.getItem(STORAGE_KEY);
     return LANGUAGES.includes(stored) ? stored : 'en';
-  } catch (e) {
+  } catch {
     return 'en';
   }
 }
@@ -19,7 +19,7 @@ function loadLanguage() {
 function saveLanguage(lang) {
   try {
     window.sessionStorage.setItem(STORAGE_KEY, lang);
-  } catch (e) {
+  } catch {
     // Storage unavailable - language resets to English next visit
   }
 }

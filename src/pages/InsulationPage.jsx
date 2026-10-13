@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import CheckboxGroup from '../components/CheckboxGroup';
 import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
-import { isAnswered } from '../state/answers.js';
+import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
-import { useLanguage } from '../content/language.jsx';
 import { continueRoute, backRoute } from '../flow/journey.js';
+import { usePageTitle } from '../hooks/usePageTitle.js';
+import { useLanguage } from '../content/language.jsx';
+
+const FIELD = 'uninsulatedParts';
+const ROUTE = '/insulation';
 
 function InsulationPage({ answers, onAnswer }) {
   const navigate = useNavigate();
@@ -15,52 +19,43 @@ function InsulationPage({ answers, onAnswer }) {
   const [errors, setErrors] = useState([]);
 
   const hasError = errors.length > 0;
-  document.title = `${hasError ? `${t('errorPrefix')} ` : ''}${t('insulation.question')} - ${t('titleSuffix')}`;
+  const question = t('insulation.question');
+  usePageTitle(question, hasError);
 
-  const handleContinue = () => {
-    if (!isAnswered('uninsulatedParts', answers.uninsulatedParts)) {
-      setErrors([{ fieldId: 'uninsulatedParts', messageKey: 'insulation.error' }]);
+  const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value, lang) }));
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isAnswered(FIELD, answers[FIELD])) {
+      setErrors([{ fieldId: FIELD, messageKey: 'insulation.error' }]);
       return;
     }
 
     setErrors([]);
-    onAnswer('uninsulatedParts', answers.uninsulatedParts);
-    navigate(continueRoute('/insulation', answers, searchParams.get('change') === 'true'));
+    navigate(continueRoute(ROUTE, answers, searchParams.get('change') === 'true'));
   };
-
-  const handleBack = () => {
-    navigate(backRoute('/insulation', answers));
-  };
-
-  const options = [
-    { value: 'loft', label: getLabel('uninsulatedParts', 'loft', lang) },
-    { value: 'walls', label: getLabel('uninsulatedParts', 'walls', lang) },
-    { value: 'floor', label: getLabel('uninsulatedParts', 'floor', lang) },
-    { value: 'allInsulated', label: getLabel('uninsulatedParts', 'allInsulated', lang) },
-    { value: 'notSure', label: getLabel('uninsulatedParts', 'notSure', lang) },
-  ];
 
   return (
     <>
-      <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        {t('back')}
-      </a>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">{t('back')}</Link>
 
       <ErrorSummary errors={errors} />
 
-      <CheckboxGroup
-        name="uninsulatedParts"
-        legend={t('insulation.question')}
-        hint={t('selectAllThatApply')}
-        options={options}
-        value={answers.uninsulatedParts}
-        onChange={(values) => onAnswer('uninsulatedParts', values)}
-        error={hasError ? t('insulation.error') : undefined}
-        exclusive={['allInsulated', 'notSure']}
-        dividerBefore={[3]}
-      />
+      <form onSubmit={handleSubmit} noValidate>
+        <CheckboxGroup
+          name={FIELD}
+          legend={question}
+          hint={t('selectAllThatApply')}
+          options={options}
+          value={answers[FIELD]}
+          onChange={(values) => onAnswer(FIELD, values)}
+          error={hasError ? t('insulation.error') : undefined}
+          exclusive={['allInsulated', 'notSure']}
+          dividerBefore={[3]}
+        />
 
-      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
+        <GovukButton type="submit">{t('continue')}</GovukButton>
+      </form>
     </>
   );
 }

@@ -1,6 +1,10 @@
 // Display labels for all form values, in English and Welsh
 // The Welsh is a draft and must be checked by a Welsh language translator before release
 
+// Placeholder contact details for the alpha prototype
+export const contactEmail = 'support@example.gov.uk';
+export const contactPhone = '0123 456 7890';
+
 export const labels = {
   propertyType: {
     detached: 'Detached',

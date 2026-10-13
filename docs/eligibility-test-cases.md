@@ -98,7 +98,7 @@
 
 ### TC-INC-001: Lowest Income Band
 **Scenario**: Very low income household
-**Input**: Terraced | Own outright | Under £12,570 | None | Gas boiler | None
+**Input**: Terraced | Own outright | £12,570 or less | None | Gas boiler | None
 **Expected Result**: Eligible (higher support level due to income)
 
 ### TC-INC-002: Low-Mid Income Band

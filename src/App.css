@@ -225,6 +225,36 @@ a:focus {
   border-bottom: 0;
 }
 
+.govuk-header__container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.govuk-header__content {
+  padding-left: var(--govuk-spacing-3);
+  padding-bottom: 10px;
+}
+
+.govuk-header__service-name {
+  display: inline-block;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+@media (max-width: 40.0525em) {
+  .govuk-header__content {
+    width: 100%;
+    padding-left: 0;
+  }
+
+  .govuk-header__service-name {
+    font-size: 18px;
+    line-height: 1.1111111111;
+  }
+}
+
 /* Buttons */
 .govuk-button {
   display: inline-block;
@@ -290,7 +320,7 @@ a:focus {
   background-color: var(--govuk-focus-colour);
 }
 
-/* Main gets focus from the skip link but should not show an outline */
+/* Main takes focus from the skip link and on each page change; no outline */
 .govuk-main-wrapper:focus {
   outline: none;
 }
@@ -610,6 +640,9 @@ a:focus {
   margin-bottom: var(--govuk-spacing-6);
 }
 
+/* Project-specific modifier, not part of the GOV.UK Design System. The Design
+   System uses the panel for confirmations only; intent.md asked for a grey
+   panel on the ineligible result, so it uses the palette's dark grey. */
 .govuk-panel--not-eligible {
   background: var(--govuk-dark-grey);
 }
