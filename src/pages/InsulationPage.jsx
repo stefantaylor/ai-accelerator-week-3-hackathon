@@ -7,25 +7,27 @@ import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
 import { continueRoute, backRoute } from '../flow/journey.js';
 import { usePageTitle } from '../hooks/usePageTitle.js';
+import { useLanguage } from '../content/language.jsx';
 
 const FIELD = 'uninsulatedParts';
 const ROUTE = '/insulation';
-const QUESTION = 'Which parts of your property are not insulated?';
-const ERROR_MESSAGE = 'Select which parts of your property are not insulated, or select \'All parts are insulated\' or \'I\'m not sure\'';
-
-const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value) }));
 
 function InsulationPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  usePageTitle(QUESTION, errors.length > 0);
+  const hasError = errors.length > 0;
+  const question = t('insulation.question');
+  usePageTitle(question, hasError);
+
+  const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value, lang) }));
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!isAnswered(FIELD, answers[FIELD])) {
-      setErrors([{ fieldId: FIELD, message: ERROR_MESSAGE }]);
+      setErrors([{ fieldId: FIELD, messageKey: 'insulation.error' }]);
       return;
     }
 
@@ -35,24 +37,24 @@ function InsulationPage({ answers, onAnswer }) {
 
   return (
     <>
-      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">Back</Link>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">{t('back')}</Link>
 
       <ErrorSummary errors={errors} />
 
       <form onSubmit={handleSubmit} noValidate>
         <CheckboxGroup
           name={FIELD}
-          legend={QUESTION}
-          hint="Select all that apply"
+          legend={question}
+          hint={t('selectAllThatApply')}
           options={options}
           value={answers[FIELD]}
           onChange={(values) => onAnswer(FIELD, values)}
-          error={errors.find(e => e.fieldId === FIELD)?.message}
+          error={hasError ? t('insulation.error') : undefined}
           exclusive={['allInsulated', 'notSure']}
           dividerBefore={[3]}
         />
 
-        <GovukButton type="submit">Continue</GovukButton>
+        <GovukButton type="submit">{t('continue')}</GovukButton>
       </form>
     </>
   );

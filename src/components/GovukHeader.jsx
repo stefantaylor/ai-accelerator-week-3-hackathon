@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../content/language.jsx';
 
 function GovukHeader() {
+  const { t } = useLanguage();
+
   return (
     <header className="govuk-header" role="banner">
       <div className="govuk-header__container govuk-width-container">
@@ -36,7 +39,7 @@ function GovukHeader() {
         </div>
         <div className="govuk-header__content">
           <Link to="/" className="govuk-header__link govuk-header__service-name">
-            Check if you can get a Green Home Grant
+            {t('serviceName')}
           </Link>
         </div>
       </div>

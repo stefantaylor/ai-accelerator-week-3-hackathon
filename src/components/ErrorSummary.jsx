@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '../content/language.jsx';
 
 export default function ErrorSummary({ errors }) {
+  const { t } = useLanguage();
   const ref = useRef(null);
 
   useEffect(() => {
@@ -21,12 +23,12 @@ export default function ErrorSummary({ errors }) {
       role="alert"
       tabIndex="-1"
     >
-      <h2 className="govuk-error-summary__title">There is a problem</h2>
+      <h2 className="govuk-error-summary__title">{t('errorSummaryTitle')}</h2>
       <div className="govuk-error-summary__body">
         <ul className="govuk-list govuk-error-summary__list">
           {errors.map((error, idx) => (
             <li key={idx}>
-              <a href={`#${error.fieldId}`}>{error.message}</a>
+              <a href={`#${error.fieldId}`}>{t(error.messageKey)}</a>
             </li>
           ))}
         </ul>

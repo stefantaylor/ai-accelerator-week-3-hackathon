@@ -7,25 +7,27 @@ import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
 import { continueRoute, backRoute } from '../flow/journey.js';
 import { usePageTitle } from '../hooks/usePageTitle.js';
+import { useLanguage } from '../content/language.jsx';
 
 const FIELD = 'propertyType';
 const ROUTE = '/property-type';
-const QUESTION = 'What type of property do you live in?';
-const ERROR_MESSAGE = 'Select the type of property you live in';
-
-const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value) }));
 
 function PropertyTypePage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  usePageTitle(QUESTION, errors.length > 0);
+  const hasError = errors.length > 0;
+  const question = t('propertyType.question');
+  usePageTitle(question, hasError);
+
+  const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value, lang) }));
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!isAnswered(FIELD, answers[FIELD])) {
-      setErrors([{ fieldId: FIELD, message: ERROR_MESSAGE }]);
+      setErrors([{ fieldId: FIELD, messageKey: 'propertyType.error' }]);
       return;
     }
 
@@ -35,21 +37,21 @@ function PropertyTypePage({ answers, onAnswer }) {
 
   return (
     <>
-      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">Back</Link>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">{t('back')}</Link>
 
       <ErrorSummary errors={errors} />
 
       <form onSubmit={handleSubmit} noValidate>
         <RadioGroup
           name={FIELD}
-          legend={QUESTION}
+          legend={question}
           options={options}
           value={answers[FIELD]}
           onChange={(value) => onAnswer(FIELD, value)}
-          error={errors.find(e => e.fieldId === FIELD)?.message}
+          error={hasError ? t('propertyType.error') : undefined}
         />
 
-        <GovukButton type="submit">Continue</GovukButton>
+        <GovukButton type="submit">{t('continue')}</GovukButton>
       </form>
     </>
   );

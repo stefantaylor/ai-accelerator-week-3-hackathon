@@ -7,31 +7,29 @@ import { isAnswered, ALLOWED_VALUES } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
 import { continueRoute, backRoute } from '../flow/journey.js';
 import { usePageTitle } from '../hooks/usePageTitle.js';
+import { useLanguage } from '../content/language.jsx';
 
 const FIELD = 'consent';
 const ROUTE = '/consent';
 
-const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value) }));
-
 export default function ConsentPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
   const isSharedOwnership = answers.ownership === 'sharedOwnership';
-  const question = isSharedOwnership
-    ? 'Do all owners of the property agree to the work?'
-    : 'Do you have your landlord\'s permission for the work?';
-  const errorMessage = isSharedOwnership
-    ? 'Select yes if all owners agree to the work'
-    : 'Select yes if you have your landlord\'s permission';
+  const question = t(isSharedOwnership ? 'consent.sharedQuestion' : 'consent.rentQuestion');
+  const errorKey = isSharedOwnership ? 'consent.sharedError' : 'consent.rentError';
+  const hasError = errors.length > 0;
+  usePageTitle(question, hasError);
 
-  usePageTitle(question, errors.length > 0);
+  const options = ALLOWED_VALUES[FIELD].map(value => ({ value, label: getLabel(FIELD, value, lang) }));
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!isAnswered(FIELD, answers[FIELD])) {
-      setErrors([{ fieldId: FIELD, message: errorMessage }]);
+      setErrors([{ fieldId: FIELD, messageKey: errorKey }]);
       return;
     }
 
@@ -41,7 +39,7 @@ export default function ConsentPage({ answers, onAnswer }) {
 
   return (
     <>
-      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">Back</Link>
+      <Link to={backRoute(ROUTE, answers)} className="govuk-back-link">{t('back')}</Link>
 
       <ErrorSummary errors={errors} />
 
@@ -52,10 +50,10 @@ export default function ConsentPage({ answers, onAnswer }) {
           options={options}
           value={answers[FIELD]}
           onChange={(value) => onAnswer(FIELD, value)}
-          error={errors.find(e => e.fieldId === FIELD)?.message}
+          error={hasError ? t(errorKey) : undefined}
         />
 
-        <GovukButton type="submit">Continue</GovukButton>
+        <GovukButton type="submit">{t('continue')}</GovukButton>
       </form>
     </>
   );

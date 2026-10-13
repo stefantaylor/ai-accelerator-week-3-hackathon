@@ -4,6 +4,8 @@ import CookieBanner from './components/CookieBanner';
 import GovukHeader from './components/GovukHeader';
 import PhaseBanner from './components/PhaseBanner';
 import GovukFooter from './components/GovukFooter';
+import LanguageSelect from './components/LanguageSelect';
+import { useLanguage } from './content/language.jsx';
 import { emptyAnswers, setAnswer } from './state/answers.js';
 import { load, save } from './state/answersStore.js';
 import { guardRedirect } from './flow/journey.js';
@@ -39,6 +41,7 @@ function Guard({ route, answers, children }) {
 }
 
 function App() {
+  const { t } = useLanguage();
   const [answers, setAnswersState] = useState(() => load());
   const location = useLocation();
   const mainRef = useRef(null);
@@ -70,10 +73,11 @@ function App() {
   return (
     <>
       <CookieBanner />
-      <a href="#main-content" className="govuk-skip-link">Skip to main content</a>
+      <a href="#main-content" className="govuk-skip-link">{t('skipLink')}</a>
       <GovukHeader />
-      <PhaseBanner phase="alpha" feedbackHref={`mailto:${contactEmail}`} />
+      <PhaseBanner feedbackHref={`mailto:${contactEmail}`} />
       <div className="govuk-width-container">
+        <LanguageSelect />
         <main className="govuk-main-wrapper" id="main-content" ref={mainRef} tabIndex={-1}>
           <Routes>
             <Route path="/" element={<StartPage />} />

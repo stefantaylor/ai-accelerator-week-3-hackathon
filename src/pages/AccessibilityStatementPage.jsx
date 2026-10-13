@@ -1,69 +1,63 @@
 import { contactEmail, contactPhone } from '../content/labels.js';
 import { usePageTitle } from '../hooks/usePageTitle.js';
+import { useLanguage } from '../content/language.jsx';
 
 export default function AccessibilityStatementPage() {
-  usePageTitle('Accessibility statement');
+  const { t } = useLanguage();
+  usePageTitle(t('accessibility.title'));
 
   return (
     <>
-      <h1 className="govuk-heading-xl">Accessibility statement</h1>
-      <p className="govuk-body">This accessibility statement applies to the Green Home Grant Eligibility Checker (alpha prototype).</p>
+      <h1 className="govuk-heading-xl">{t('accessibility.title')}</h1>
+      <p className="govuk-body">{t('accessibility.appliesTo')}</p>
 
-      <h2 className="govuk-heading-l">How accessible this service is</h2>
-      <p className="govuk-body">This service is partially compliant with WCAG 2.2 Level AA.</p>
-      <p className="govuk-body">The following issues are known non-compliances:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.howAccessibleHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.compliance')}</p>
+      <p className="govuk-body">{t('accessibility.knownIssues')}</p>
       <ul className="govuk-list govuk-list--bullet">
-        <li>JavaScript is required to use this service. This service will not work if JavaScript is disabled.</li>
+        <li>{t('accessibility.javascript')}</li>
       </ul>
 
-      <h2 className="govuk-heading-l">Feedback and contact information</h2>
-      <p className="govuk-body">If you have difficulty using this service or need adjustments, please contact us:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.contactHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.contactIntro')}</p>
       <ul className="govuk-list">
-        <li>Email: <a href={`mailto:${contactEmail}`} className="govuk-link">{contactEmail}</a></li>
-        <li>Phone: {contactPhone}</li>
+        <li>{t('accessibility.email')} <a href={`mailto:${contactEmail}`} className="govuk-link">{contactEmail}</a></li>
+        <li>{t('accessibility.phone')} {contactPhone}</li>
       </ul>
 
-      <h2 className="govuk-heading-l">Reporting accessibility problems with this service</h2>
-      <p className="govuk-body">
-        We are always looking to improve the accessibility of this service. If you find any problems not listed on
-        this page or think we are not meeting accessibility requirements, contact us using the details above.
-      </p>
+      <h2 className="govuk-heading-l">{t('accessibility.reportingHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.reporting')}</p>
 
-      <h2 className="govuk-heading-l">Enforcement procedure</h2>
+      <h2 className="govuk-heading-l">{t('accessibility.enforcementHeading')}</h2>
       <p className="govuk-body">
-        The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies
-        (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’).
-        If you are not happy with how we respond to your complaint,{' '}
+        {t('accessibility.enforcement')}{' '}
         <a href="https://www.equalityadvisoryservice.com/" className="govuk-link">
-          contact the Equality Advisory and Support Service (EASS)
+          {t('accessibility.enforcementLink')}
         </a>.
       </p>
 
-      <h2 className="govuk-heading-l">Technical information about this service’s accessibility</h2>
-      <p className="govuk-body">This service uses the following technologies:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.technicalHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.technicalIntro')}</p>
       <ul className="govuk-list govuk-list--bullet">
-        <li>React for user interface</li>
-        <li>Browser sessionStorage for client-side data persistence</li>
-        <li>GOV.UK Design System components and styles</li>
+        <li>{t('accessibility.react')}</li>
+        <li>{t('accessibility.sessionStorage')}</li>
+        <li>{t('accessibility.designSystem')}</li>
       </ul>
 
-      <h2 className="govuk-heading-l">How we tested this service</h2>
-      <p className="govuk-body">This is an alpha prototype. Accessibility testing is ongoing.</p>
-      <p className="govuk-body">Testing includes:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.testingHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.testingAlpha')}</p>
+      <p className="govuk-body">{t('accessibility.testingIncludes')}</p>
       <ul className="govuk-list govuk-list--bullet">
-        <li>Automated accessibility scanning with axe and Lighthouse</li>
-        <li>Keyboard navigation testing</li>
-        <li>Screen reader compatibility testing</li>
+        <li>{t('accessibility.automated')}</li>
+        <li>{t('accessibility.keyboard')}</li>
+        <li>{t('accessibility.screenReader')}</li>
       </ul>
 
-      <h2 className="govuk-heading-l">What we are doing to improve accessibility</h2>
-      <p className="govuk-body">As this is an alpha prototype, we are actively working to improve accessibility and fix any identified issues.</p>
+      <h2 className="govuk-heading-l">{t('accessibility.improveHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.improve')}</p>
 
-      <h2 className="govuk-heading-l">Preparation of this accessibility statement</h2>
-      <p className="govuk-body">
-        This statement was prepared on 13 October 2026. The service was last tested on 13 October 2026 by the
-        service team, using automated checks and manual keyboard testing.
-      </p>
+      <h2 className="govuk-heading-l">{t('accessibility.preparationHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.preparation')}</p>
     </>
   );
 }

@@ -785,6 +785,29 @@ a:focus {
   margin-right: var(--govuk-spacing-2);
 }
 
+/* Language switcher (based on the HMRC language select pattern) */
+.app-language-select__list {
+  margin: var(--govuk-spacing-3) 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: right;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.app-language-select__list-item {
+  display: inline-block;
+}
+
+.app-language-select__list-item + .app-language-select__list-item::before {
+  content: "";
+  display: inline-block;
+  height: 1em;
+  margin: 0 var(--govuk-spacing-2);
+  border-left: 1px solid var(--govuk-black);
+  vertical-align: middle;
+}
+
 /* Cookie banner */
 .govuk-cookie-banner {
   padding-top: 20px;
