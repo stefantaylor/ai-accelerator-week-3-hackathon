@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import CookieBanner from './components/CookieBanner';
 import GovukHeader from './components/GovukHeader';
 import PhaseBanner from './components/PhaseBanner';
 import GovukFooter from './components/GovukFooter';
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <>
+      <CookieBanner />
       <GovukHeader />
       <PhaseBanner phase="alpha" feedbackHref="#" />
       <div className="govuk-width-container">
