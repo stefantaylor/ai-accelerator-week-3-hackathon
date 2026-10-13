@@ -1,36 +1,40 @@
+import { useLanguage } from '../content/language.jsx';
+
 const GOVUK = 'https://www.gov.uk';
 
 const servicesLinks = [
-  ['Benefits', '/browse/benefits'],
-  ['Births, death, marriages and care', '/browse/births-deaths-marriages'],
-  ['Business and self-employed', '/browse/business'],
-  ['Childcare and parenting', '/browse/childcare-parenting'],
-  ['Citizenship and living in the UK', '/browse/citizenship'],
-  ['Crime, justice and the law', '/browse/justice'],
-  ['Disabled people', '/browse/disabilities'],
-  ['Driving and transport', '/browse/driving'],
-  ['Education and learning', '/browse/education'],
-  ['Employing people', '/browse/employing-people'],
-  ['Environment and countryside', '/browse/environment-countryside'],
-  ['Housing and local services', '/browse/housing-local-services'],
-  ['Money and tax', '/browse/tax'],
-  ['Passports, travel and living abroad', '/browse/abroad'],
-  ['Visas and immigration', '/browse/visas-immigration'],
-  ['Working, jobs and pensions', '/browse/working'],
+  ['services.benefits', '/browse/benefits'],
+  ['services.births', '/browse/births-deaths-marriages'],
+  ['services.business', '/browse/business'],
+  ['services.childcare', '/browse/childcare-parenting'],
+  ['services.citizenship', '/browse/citizenship'],
+  ['services.justice', '/browse/justice'],
+  ['services.disabilities', '/browse/disabilities'],
+  ['services.driving', '/browse/driving'],
+  ['services.education', '/browse/education'],
+  ['services.employing', '/browse/employing-people'],
+  ['services.environment', '/browse/environment-countryside'],
+  ['services.housing', '/browse/housing-local-services'],
+  ['services.tax', '/browse/tax'],
+  ['services.abroad', '/browse/abroad'],
+  ['services.visas', '/browse/visas-immigration'],
+  ['services.working', '/browse/working'],
 ];
 
 const governmentLinks = [
-  ['Departments', '/government/organisations'],
-  ['News', '/search/news-and-communications'],
-  ['Guidance and regulation', '/search/guidance-and-regulation'],
-  ['Research and statistics', '/search/research-and-statistics'],
-  ['Policy papers and consultations', '/search/policy-papers-and-consultations'],
-  ['Transparency', '/search/transparency-and-freedom-of-information-releases'],
-  ['How government works', '/government/how-government-works'],
-  ['Get involved', '/government/get-involved'],
+  ['government.departments', '/government/organisations'],
+  ['government.news', '/search/news-and-communications'],
+  ['government.guidance', '/search/guidance-and-regulation'],
+  ['government.research', '/search/research-and-statistics'],
+  ['government.policy', '/search/policy-papers-and-consultations'],
+  ['government.transparency', '/search/transparency-and-freedom-of-information-releases'],
+  ['government.howGovernmentWorks', '/government/how-government-works'],
+  ['government.getInvolved', '/government/get-involved'],
 ];
 
 export default function GovukFooter() {
+  const { t } = useLanguage();
+
   return (
     <footer className="govuk-footer" role="contentinfo">
       <div className="govuk-width-container">
@@ -59,21 +63,21 @@ export default function GovukFooter() {
 
         <div className="govuk-footer__navigation">
           <div className="govuk-grid-column-two-thirds govuk-!-display-none-print">
-            <h2 className="govuk-footer__heading govuk-heading-m">Services and information</h2>
+            <h2 className="govuk-footer__heading govuk-heading-m">{t('footer.servicesHeading')}</h2>
             <ul className="govuk-footer__list govuk-footer__list--columns-2">
-              {servicesLinks.map(([text, path]) => (
+              {servicesLinks.map(([key, path]) => (
                 <li key={path} className="govuk-footer__list-item">
-                  <a className="govuk-footer__link" href={`${GOVUK}${path}`}>{text}</a>
+                  <a className="govuk-footer__link" href={`${GOVUK}${path}`}>{t(`footer.${key}`)}</a>
                 </li>
               ))}
             </ul>
           </div>
           <div className="govuk-grid-column-one-third govuk-!-display-none-print">
-            <h2 className="govuk-footer__heading govuk-heading-m">Government activity</h2>
+            <h2 className="govuk-footer__heading govuk-heading-m">{t('footer.governmentHeading')}</h2>
             <ul className="govuk-footer__list govuk-footer__list--columns-1">
-              {governmentLinks.map(([text, path]) => (
+              {governmentLinks.map(([key, path]) => (
                 <li key={path} className="govuk-footer__list-item">
-                  <a className="govuk-footer__link" href={`${GOVUK}${path}`}>{text}</a>
+                  <a className="govuk-footer__link" href={`${GOVUK}${path}`}>{t(`footer.${key}`)}</a>
                 </li>
               ))}
             </ul>
@@ -84,32 +88,32 @@ export default function GovukFooter() {
 
         <div className="govuk-footer__meta">
           <div className="govuk-footer__meta-item govuk-footer__meta-item--grow">
-            <h2 className="govuk-visually-hidden">Support links</h2>
+            <h2 className="govuk-visually-hidden">{t('footer.supportLinks')}</h2>
             <ul className="govuk-footer__inline-list govuk-!-display-none-print">
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href={`${GOVUK}/help`}>Help</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/help`}>{t('footer.help')}</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href={`${GOVUK}/help/privacy-notice`}>Privacy</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/help/privacy-notice`}>{t('footer.privacy')}</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href={`${GOVUK}/help/cookies`}>Cookies</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/help/cookies`}>{t('footer.cookies')}</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href="/accessibility-statement">Accessibility statement</a>
+                <a className="govuk-footer__link" href="/accessibility-statement">{t('footer.accessibility')}</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href={`${GOVUK}/contact`}>Contact</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/contact`}>{t('footer.contact')}</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href={`${GOVUK}/help/terms-conditions`}>Terms and conditions</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/help/terms-conditions`}>{t('footer.terms')}</a>
               </li>
               <li className="govuk-footer__inline-list-item">
                 <a className="govuk-footer__link" lang="cy" href={`${GOVUK}/cymraeg`}>Rhestr o Wasanaethau Cymraeg</a>
               </li>
               <li className="govuk-footer__inline-list-item">
                 <a className="govuk-footer__link" href={`${GOVUK}/government/organisations/government-digital-service`}>
-                  Government Digital Service
+                  {t('footer.gds')}
                 </a>
               </li>
             </ul>
@@ -129,15 +133,15 @@ export default function GovukFooter() {
               />
             </svg>
             <span className="govuk-footer__licence-description">
-              All content is available under the{' '}
+              {t('footer.licenceBefore')}
               <a
                 className="govuk-footer__link"
                 href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
                 rel="license"
               >
-                Open Government Licence v3.0
+                {t('footer.licenceLink')}
               </a>
-              , except where otherwise stated
+              {t('footer.licenceAfter')}
             </span>
           </div>
           <div className="govuk-footer__meta-item">
@@ -145,7 +149,7 @@ export default function GovukFooter() {
               className="govuk-footer__link govuk-footer__copyright-logo"
               href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
             >
-              © Crown copyright
+              {t('footer.copyright')}
             </a>
           </div>
         </div>

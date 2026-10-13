@@ -5,18 +5,21 @@ import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
+import { useLanguage } from '../content/language.jsx';
 import { continueRoute, backRoute } from '../flow/journey.js';
 
 function HeatingPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  document.title = `${errors.length ? 'Error: ' : ''}What is your main heating system? - Check if you can get a Green Home Grant - GOV.UK`;
+  const hasError = errors.length > 0;
+  document.title = `${hasError ? `${t('errorPrefix')} ` : ''}${t('heating.question')} - ${t('titleSuffix')}`;
 
   const handleContinue = () => {
     if (!isAnswered('heating', answers.heating)) {
-      setErrors([{ fieldId: 'heating', message: 'Select your main heating system' }]);
+      setErrors([{ fieldId: 'heating', messageKey: 'heating.error' }]);
       return;
     }
 
@@ -30,31 +33,31 @@ function HeatingPage({ answers, onAnswer }) {
   };
 
   const options = [
-    { value: 'gasBoiler', label: getLabel('heating', 'gasBoiler') },
-    { value: 'oilBoiler', label: getLabel('heating', 'oilBoiler') },
-    { value: 'electric', label: getLabel('heating', 'electric') },
-    { value: 'heatPump', label: getLabel('heating', 'heatPump') },
-    { value: 'other', label: getLabel('heating', 'other') },
+    { value: 'gasBoiler', label: getLabel('heating', 'gasBoiler', lang) },
+    { value: 'oilBoiler', label: getLabel('heating', 'oilBoiler', lang) },
+    { value: 'electric', label: getLabel('heating', 'electric', lang) },
+    { value: 'heatPump', label: getLabel('heating', 'heatPump', lang) },
+    { value: 'other', label: getLabel('heating', 'other', lang) },
   ];
 
   return (
     <>
       <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
+        {t('back')}
       </a>
 
       <ErrorSummary errors={errors} />
 
       <RadioGroup
         name="heating"
-        legend="What is your main heating system?"
+        legend={t('heating.question')}
         options={options}
         value={answers.heating}
         onChange={(value) => onAnswer('heating', value)}
-        error={errors.find(e => e.fieldId === 'heating')?.message}
+        error={hasError ? t('heating.error') : undefined}
       />
 
-      <GovukButton onClick={handleContinue}>Continue</GovukButton>
+      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
     </>
   );
 }

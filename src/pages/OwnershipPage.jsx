@@ -5,18 +5,21 @@ import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
+import { useLanguage } from '../content/language.jsx';
 import { continueRoute, backRoute } from '../flow/journey.js';
 
 function OwnershipPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  document.title = `${errors.length ? 'Error: ' : ''}Do you own or rent your property? - Check if you can get a Green Home Grant - GOV.UK`;
+  const hasError = errors.length > 0;
+  document.title = `${hasError ? `${t('errorPrefix')} ` : ''}${t('ownership.question')} - ${t('titleSuffix')}`;
 
   const handleContinue = () => {
     if (!isAnswered('ownership', answers.ownership)) {
-      setErrors([{ fieldId: 'ownership', message: 'Select if you own or rent your property' }]);
+      setErrors([{ fieldId: 'ownership', messageKey: 'ownership.error' }]);
       return;
     }
 
@@ -30,30 +33,30 @@ function OwnershipPage({ answers, onAnswer }) {
   };
 
   const options = [
-    { value: 'ownOutright', label: getLabel('ownership', 'ownOutright') },
-    { value: 'mortgage', label: getLabel('ownership', 'mortgage') },
-    { value: 'sharedOwnership', label: getLabel('ownership', 'sharedOwnership') },
-    { value: 'rent', label: getLabel('ownership', 'rent') },
+    { value: 'ownOutright', label: getLabel('ownership', 'ownOutright', lang) },
+    { value: 'mortgage', label: getLabel('ownership', 'mortgage', lang) },
+    { value: 'sharedOwnership', label: getLabel('ownership', 'sharedOwnership', lang) },
+    { value: 'rent', label: getLabel('ownership', 'rent', lang) },
   ];
 
   return (
     <>
       <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
+        {t('back')}
       </a>
 
       <ErrorSummary errors={errors} />
 
       <RadioGroup
         name="ownership"
-        legend="Do you own or rent your property?"
+        legend={t('ownership.question')}
         options={options}
         value={answers.ownership}
         onChange={(value) => onAnswer('ownership', value)}
-        error={errors.find(e => e.fieldId === 'ownership')?.message}
+        error={hasError ? t('ownership.error') : undefined}
       />
 
-      <GovukButton onClick={handleContinue}>Continue</GovukButton>
+      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
     </>
   );
 }

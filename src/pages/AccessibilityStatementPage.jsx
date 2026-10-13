@@ -1,44 +1,47 @@
+import { useLanguage } from '../content/language.jsx';
+
 export default function AccessibilityStatementPage() {
-  document.title = 'Accessibility statement - Check if you can get a Green Home Grant - GOV.UK';
+  const { t } = useLanguage();
+  document.title = `${t('accessibility.title')} - ${t('titleSuffix')}`;
 
   return (
     <>
-      <h1 className="govuk-heading-xl">Accessibility statement</h1>
-      <p className="govuk-body">This accessibility statement applies to the Green Home Grant Eligibility Checker (alpha prototype).</p>
+      <h1 className="govuk-heading-xl">{t('accessibility.title')}</h1>
+      <p className="govuk-body">{t('accessibility.appliesTo')}</p>
 
-      <h2 className="govuk-heading-l">How accessible this service is</h2>
-      <p className="govuk-body">This service is partially compliant with WCAG 2.2 Level AA.</p>
-      <p className="govuk-body">The following issues are known non-compliances:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.howAccessibleHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.compliance')}</p>
+      <p className="govuk-body">{t('accessibility.knownIssues')}</p>
       <ul className="govuk-list govuk-list--bullet">
-        <li>JavaScript is required to use this service. This service will not work if JavaScript is disabled.</li>
+        <li>{t('accessibility.javascript')}</li>
       </ul>
 
-      <h2 className="govuk-heading-l">Feedback and contact information</h2>
-      <p className="govuk-body">If you have difficulty using this service or need adjustments, please contact us:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.contactHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.contactIntro')}</p>
       <ul className="govuk-list">
-        <li>Email: <a href="mailto:support@example.gov.uk" className="govuk-link">support@example.gov.uk</a></li>
-        <li>Phone: 0123 456 7890</li>
+        <li>{t('accessibility.email')} <a href="mailto:support@example.gov.uk" className="govuk-link">support@example.gov.uk</a></li>
+        <li>{t('accessibility.phone')} 0123 456 7890</li>
       </ul>
 
-      <h2 className="govuk-heading-l">Technical information</h2>
-      <p className="govuk-body">This service uses the following technologies:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.technicalHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.technicalIntro')}</p>
       <ul className="govuk-list govuk-list--bullet">
-        <li>React for user interface</li>
-        <li>Browser sessionStorage for client-side data persistence</li>
-        <li>GOV.UK Design System components and styles</li>
+        <li>{t('accessibility.react')}</li>
+        <li>{t('accessibility.sessionStorage')}</li>
+        <li>{t('accessibility.designSystem')}</li>
       </ul>
 
-      <h2 className="govuk-heading-l">How we tested this service</h2>
-      <p className="govuk-body">This is an alpha prototype. Accessibility testing is ongoing.</p>
-      <p className="govuk-body">Testing includes:</p>
+      <h2 className="govuk-heading-l">{t('accessibility.testingHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.testingAlpha')}</p>
+      <p className="govuk-body">{t('accessibility.testingIncludes')}</p>
       <ul className="govuk-list govuk-list--bullet">
-        <li>Automated accessibility scanning with axe and Lighthouse</li>
-        <li>Keyboard navigation testing</li>
-        <li>Screen reader compatibility testing</li>
+        <li>{t('accessibility.automated')}</li>
+        <li>{t('accessibility.keyboard')}</li>
+        <li>{t('accessibility.screenReader')}</li>
       </ul>
 
-      <h2 className="govuk-heading-l">What we are doing to improve</h2>
-      <p className="govuk-body">As this is an alpha prototype, we are actively working to improve accessibility and fix any identified issues.</p>
+      <h2 className="govuk-heading-l">{t('accessibility.improveHeading')}</h2>
+      <p className="govuk-body">{t('accessibility.improve')}</p>
     </>
   );
 }

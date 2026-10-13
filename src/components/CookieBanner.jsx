@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLanguage } from '../content/language.jsx';
 
 const STORAGE_KEY = 'ghg-checker:cookie-consent';
 
@@ -19,6 +20,7 @@ function saveChoice(choice) {
 }
 
 export default function CookieBanner() {
+  const { t } = useLanguage();
   // 'question' | 'accept' | 'reject' | 'hidden'
   const [view, setView] = useState(() => (loadChoice() ? 'hidden' : 'question'));
   const confirmationRef = useRef(null);
@@ -41,26 +43,23 @@ export default function CookieBanner() {
       className="govuk-cookie-banner"
       data-nosnippet=""
       role="region"
-      aria-label="Cookies on Check if you can get a Green Home Grant"
+      aria-label={t('cookieBanner.label')}
     >
       {view === 'question' ? (
         <div className="govuk-cookie-banner__message govuk-width-container">
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-two-thirds">
-              <h2 className="govuk-cookie-banner__heading govuk-heading-m">Cookies on our service</h2>
+              <h2 className="govuk-cookie-banner__heading govuk-heading-m">{t('cookieBanner.heading')}</h2>
               <div className="govuk-cookie-banner__content">
-                <p className="govuk-body">We use some essential cookies to make this service work.</p>
-                <p className="govuk-body">
-                  We'd also like to use analytics cookies so we can understand how you use the service and make
-                  improvements.
-                </p>
+                <p className="govuk-body">{t('cookieBanner.essential')}</p>
+                <p className="govuk-body">{t('cookieBanner.analytics')}</p>
               </div>
               <div className="govuk-button-group">
                 <button type="button" className="govuk-button" onClick={() => handleChoice('accept')}>
-                  Accept analytics cookies
+                  {t('cookieBanner.accept')}
                 </button>
                 <button type="button" className="govuk-button" onClick={() => handleChoice('reject')}>
-                  Reject analytics cookies
+                  {t('cookieBanner.reject')}
                 </button>
               </div>
             </div>
@@ -77,12 +76,12 @@ export default function CookieBanner() {
             <div className="govuk-grid-column-two-thirds">
               <div className="govuk-cookie-banner__content">
                 <p className="govuk-body">
-                  You’ve {view === 'accept' ? 'accepted' : 'rejected'} additional cookies.
+                  {t(view === 'accept' ? 'cookieBanner.accepted' : 'cookieBanner.rejected')}
                 </p>
               </div>
               <div className="govuk-button-group">
                 <button type="button" className="govuk-button" onClick={() => setView('hidden')}>
-                  Hide cookie message
+                  {t('cookieBanner.hide')}
                 </button>
               </div>
             </div>

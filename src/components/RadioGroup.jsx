@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { useLanguage } from '../content/language.jsx';
 
 export default function RadioGroup({
   name,
@@ -10,6 +11,8 @@ export default function RadioGroup({
   error,
   dividerBefore,
 }) {
+  const { t } = useLanguage();
+
   return (
     <div className={`govuk-form-group${error ? ' govuk-form-group--error' : ''}`}>
       <fieldset
@@ -20,12 +23,12 @@ export default function RadioGroup({
           <h1 className="govuk-fieldset__heading">{legend}</h1>
         </legend>
         {hint && <div id={`${name}-hint`} className="govuk-hint">{hint}</div>}
-        {error && <p id={`${name}-error`} className="govuk-error-message"><span className="govuk-visually-hidden">Error:</span> {error}</p>}
+        {error && <p id={`${name}-error`} className="govuk-error-message"><span className="govuk-visually-hidden">{t('errorPrefix')}</span> {error}</p>}
         <div className="govuk-radios" data-module="govuk-radios">
           {options.map((option, idx) => (
             <Fragment key={option.value}>
               {dividerBefore && dividerBefore.includes(idx) && (
-                <div className="govuk-radios__divider">or</div>
+                <div className="govuk-radios__divider">{t('or')}</div>
               )}
               <div className="govuk-radios__item">
                 <input

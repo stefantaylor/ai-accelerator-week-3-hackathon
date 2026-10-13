@@ -5,21 +5,23 @@ import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
+import { useLanguage } from '../content/language.jsx';
 import { continueRoute, firstIncompleteRoute, isJourneyComplete } from '../flow/journey.js';
 
 export default function PriorGrantsPage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
   // Set document title
   const hasErrors = errors.length > 0;
-  document.title = `${hasErrors ? 'Error: ' : ''}Have you received a Green Home Grant before? - Check if you can get a Green Home Grant - GOV.UK`;
+  document.title = `${hasErrors ? `${t('errorPrefix')} ` : ''}${t('priorGrants.question')} - ${t('titleSuffix')}`;
 
   const handleContinue = () => {
     // Validate
     if (!isAnswered('priorGrants', answers.priorGrants)) {
-      setErrors([{ fieldId: 'priorGrants', message: 'Select if you have received a Green Home Grant before' }]);
+      setErrors([{ fieldId: 'priorGrants', messageKey: 'priorGrants.error' }]);
       return;
     }
 
@@ -43,33 +45,32 @@ export default function PriorGrantsPage({ answers, onAnswer }) {
   };
 
   const options = [
-    { value: 'insulation', label: getLabel('priorGrants', 'insulation') },
-    { value: 'heatPump', label: getLabel('priorGrants', 'heatPump') },
-    { value: 'none', label: getLabel('priorGrants', 'none') },
+    { value: 'insulation', label: getLabel('priorGrants', 'insulation', lang) },
+    { value: 'heatPump', label: getLabel('priorGrants', 'heatPump', lang) },
+    { value: 'none', label: getLabel('priorGrants', 'none', lang) },
   ];
 
   return (
     <>
       <a href="/" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
+        {t('back')}
       </a>
 
       <ErrorSummary errors={errors} />
 
       <CheckboxGroup
         name="priorGrants"
-        legend="Have you received a Green Home Grant before?"
-        hint="Select all that apply"
+        legend={t('priorGrants.question')}
+        hint={t('selectAllThatApply')}
         options={options}
         value={answers.priorGrants}
         onChange={handleCheckboxChange}
-        error={errors.find(e => e.fieldId === 'priorGrants')?.message}
+        error={hasErrors ? t('priorGrants.error') : undefined}
         exclusive={['none']}
         dividerBefore={[2]}
-        dividerLabel="or"
       />
 
-      <GovukButton onClick={handleContinue}>Continue</GovukButton>
+      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
     </>
   );
 }

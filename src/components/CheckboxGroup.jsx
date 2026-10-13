@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { useLanguage } from '../content/language.jsx';
 
 export default function CheckboxGroup({
   name,
@@ -10,8 +11,10 @@ export default function CheckboxGroup({
   error,
   exclusive,
   dividerBefore,
-  dividerLabel = 'or',
+  dividerLabel,
 }) {
+  const { t } = useLanguage();
+
   const handleChange = (optionValue) => {
     let newValue;
 
@@ -45,12 +48,12 @@ export default function CheckboxGroup({
           <h1 className="govuk-fieldset__heading">{legend}</h1>
         </legend>
         {hint && <div id={`${name}-hint`} className="govuk-hint">{hint}</div>}
-        {error && <p id={`${name}-error`} className="govuk-error-message"><span className="govuk-visually-hidden">Error:</span> {error}</p>}
+        {error && <p id={`${name}-error`} className="govuk-error-message"><span className="govuk-visually-hidden">{t('errorPrefix')}</span> {error}</p>}
         <div className="govuk-checkboxes" data-module="govuk-checkboxes">
           {options.map((option, idx) => (
             <Fragment key={option.value}>
               {dividerBefore && dividerBefore.includes(idx) && (
-                <div className="govuk-checkboxes__divider">{dividerLabel}</div>
+                <div className="govuk-checkboxes__divider">{dividerLabel ?? t('or')}</div>
               )}
               <div className="govuk-checkboxes__item">
                 <input

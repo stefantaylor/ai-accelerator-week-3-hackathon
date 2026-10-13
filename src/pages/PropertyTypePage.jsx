@@ -5,18 +5,21 @@ import ErrorSummary from '../components/ErrorSummary';
 import GovukButton from '../components/GovukButton';
 import { isAnswered } from '../state/answers.js';
 import { getLabel } from '../content/labels.js';
+import { useLanguage } from '../content/language.jsx';
 import { continueRoute, backRoute } from '../flow/journey.js';
 
 function PropertyTypePage({ answers, onAnswer }) {
   const navigate = useNavigate();
+  const { lang, t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState([]);
 
-  document.title = `${errors.length ? 'Error: ' : ''}What type of property do you live in? - Check if you can get a Green Home Grant - GOV.UK`;
+  const hasError = errors.length > 0;
+  document.title = `${hasError ? `${t('errorPrefix')} ` : ''}${t('propertyType.question')} - ${t('titleSuffix')}`;
 
   const handleContinue = () => {
     if (!isAnswered('propertyType', answers.propertyType)) {
-      setErrors([{ fieldId: 'propertyType', message: 'Select the type of property you live in' }]);
+      setErrors([{ fieldId: 'propertyType', messageKey: 'propertyType.error' }]);
       return;
     }
 
@@ -30,31 +33,31 @@ function PropertyTypePage({ answers, onAnswer }) {
   };
 
   const options = [
-    { value: 'detached', label: getLabel('propertyType', 'detached') },
-    { value: 'semiDetached', label: getLabel('propertyType', 'semiDetached') },
-    { value: 'terraced', label: getLabel('propertyType', 'terraced') },
-    { value: 'flat', label: getLabel('propertyType', 'flat') },
-    { value: 'bungalow', label: getLabel('propertyType', 'bungalow') },
+    { value: 'detached', label: getLabel('propertyType', 'detached', lang) },
+    { value: 'semiDetached', label: getLabel('propertyType', 'semiDetached', lang) },
+    { value: 'terraced', label: getLabel('propertyType', 'terraced', lang) },
+    { value: 'flat', label: getLabel('propertyType', 'flat', lang) },
+    { value: 'bungalow', label: getLabel('propertyType', 'bungalow', lang) },
   ];
 
   return (
     <>
       <a href="#" className="govuk-back-link" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-        Back
+        {t('back')}
       </a>
 
       <ErrorSummary errors={errors} />
 
       <RadioGroup
         name="propertyType"
-        legend="What type of property do you live in?"
+        legend={t('propertyType.question')}
         options={options}
         value={answers.propertyType}
         onChange={(value) => onAnswer('propertyType', value)}
-        error={errors.find(e => e.fieldId === 'propertyType')?.message}
+        error={hasError ? t('propertyType.error') : undefined}
       />
 
-      <GovukButton onClick={handleContinue}>Continue</GovukButton>
+      <GovukButton onClick={handleContinue}>{t('continue')}</GovukButton>
     </>
   );
 }
