@@ -1,6 +1,9 @@
 # Room 101: Green Home Grant
-App: https://app2-lab11138.labs.decoded.com/
-Code: https://github.com/stefantaylor/ai-accelerator-week-3-hackathon
+
+# Submission Details
+## Links
+- App: https://app2-lab11138.labs.decoded.com/
+- Code: https://github.com/stefantaylor/ai-accelerator-week-3-hackathon
 
 ## What's in our submission
 ```
@@ -25,7 +28,10 @@ plan.md           App Plan
 - We implemented Playwright for for integration testing
 -- We also implemented Playwright user interface mode to enable UI for Playwright tests
 - We created a Welsh language implementation where the user can easily switch between English and Welsh (Welsh language not proofed)
+- We also included the lighthouse bash script for accessibility and performance checks
 
+<br>
+<br>
 
 # Green Home Grant eligibility checker
 
