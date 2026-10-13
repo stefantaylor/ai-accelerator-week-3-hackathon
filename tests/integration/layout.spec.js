@@ -123,10 +123,10 @@ test.describe('Moving between pages', () => {
 });
 
 test.describe('Header', () => {
-  test('shows the service name linking to the start page', async ({ page }) => {
+  test('GOV.UK logo links to the start page', async ({ page }) => {
     await page.goto('/prior-grants');
     const banner = page.getByRole('banner');
-    await banner.getByRole('link', { name: 'Check if you can get a Green Home Grant', exact: true }).click();
+    await banner.getByRole('link', { name: 'GOV.UK', exact: true }).click();
     await expect(page).toHaveURL(/\/$/);
   });
 });
