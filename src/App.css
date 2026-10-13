@@ -56,6 +56,18 @@ body {
   padding-bottom: var(--govuk-spacing-8);
 }
 
+/* Keep the footer at the bottom of the window on short pages */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#root > .govuk-width-container {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
 /* Typography */
 .govuk-heading-xl {
   font-size: 48px;
