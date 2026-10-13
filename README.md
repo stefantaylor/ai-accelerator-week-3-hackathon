@@ -1,8 +1,38 @@
+# Room 101: Green Home Grant
+App: https://app2-lab11138.labs.decoded.com/
+Code: https://github.com/stefantaylor/ai-accelerator-week-3-hackathon
+
+## What's in our submission
+```
+src/
+  pages/          One component per page in the journey
+  components/     Shared GOV.UK components (header, footer, radios, checkboxes, error summary)
+  eligibility/    The eligibility rules (assessEligibility.js - pure function)
+  flow/           Page order and navigation logic (journey.js)
+  state/          Storing and validating answers
+  content/        Labels for answers
+  __tests__/      Unit and component tests
+tests/integration/  Playwright end-to-end tests
+docs/             Eligibility rules and test cases
+AI_LOG.md         AI Interaction Log
+intent.md         App Intent
+spec.md           App Spec
+plan.md           App Plan
+```
+
+## Please look at (beyond the MVS)
+- We attempted to hit all the "Excellent" goals for the Rubrik
+- We implemented Playwright for for integration testing
+-- We also implemented Playwright user interface mode to enable UI for Playwright tests
+- We created a Welsh language implementation where the user can easily switch between English and Welsh (Welsh language not proofed)
+
+
 # Green Home Grant eligibility checker
 
 A prototype GOV.UK service that lets members of the public check whether they can get a Green Home Grant for **insulation** and/or **a heat pump**, and, if they are eligible, what level of support they would get.
 
 The service follows the [GOV.UK Design System](https://design-system.service.gov.uk/): one question per page, a Back link and Continue button on each page, error summaries, and a "Check your answers" summary before the result.
+
 
 ## How the service works
 
