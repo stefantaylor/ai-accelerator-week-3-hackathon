@@ -30,7 +30,16 @@ export default function GovukFooter() {
             <h2 className="govuk-visually-hidden">Support links</h2>
             <ul className="govuk-footer__inline-list">
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href="/accessibility-statement">Accessibility statement</a>
+                <a className="govuk-footer__link" href="https://forms.office.com/e/j6J0LdRZNC">Contact Us</a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a className="govuk-footer__link" href="/cookies">Cookies</a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a className="govuk-footer__link" href="/privacy-policy">Privacy Policy</a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a className="govuk-footer__link" href="/accessibility-statement">Accessibility Statement</a>
               </li>
             </ul>
 
