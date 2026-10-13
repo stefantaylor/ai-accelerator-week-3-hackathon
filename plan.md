@@ -206,3 +206,50 @@ These are small choices I made while planning. None of them change what the serv
 | Skip insulation/heating after a prior grant of that type | **Skip it.** Spec updated: V6, §4.3 order, Back links, guards, change mode, ACs G4a (Q1). |
 | "I'm not sure" | All-or-nothing (Q5a) |
 | Page not found | Included (Q9) |
+
+---
+
+## Results (2026-10-12)
+
+All phases built. `npm test`: **7 test files, 139 tests, all passing.** Nothing committed.
+
+### Acceptance criteria
+
+| AC | Status | Where |
+|---|---|---|
+| AC1.1–AC1.11 | ✅ | `src/eligibility/assessEligibility.test.js` |
+| AC1.6a | ✅ | `src/test/questionPages.test.jsx` (exclusive checkboxes) |
+| AC2.1, AC2.2 | ✅ | `assessEligibility.test.js` |
+| AC2.3 | ✅ | `src/test/journey.test.jsx` (full journey) |
+| AC3.1, AC3.3 | ✅ | `journey.test.jsx` (early exit) |
+| AC3.2 | ✅ | `assessEligibility.test.js` |
+| AC4.1 | ✅ | `questionPages.test.jsx`, `journey.test.jsx` |
+| AC4.2 | ✅ | `src/state/answers.test.js` |
+| AC4.3 | ✅ | `src/flow/journey.test.js`, `journey.test.jsx` |
+| AC4a.1–AC4a.3 | ✅ | `journey.test.js`, `answers.test.js` |
+| AC4a.4, AC4a.5 | ✅ | `journey.test.js`, `journey.test.jsx` |
+| AC5.1, AC5.7–AC5.9 | ✅ | `journey.test.jsx` |
+| AC5.2, AC5.3, AC5.5, AC5.6 | ✅ | `src/state/answersStore.test.js` |
+| AC5.4 | ✅ code check / ⏳ browser | No `fetch`, XHR, beacon or WebSocket in `src/`. Network tab check still to do. |
+| AC6.1–AC6.4 | ✅ | `questionPages.test.jsx` (every question page), `journey.test.jsx` (other pages) |
+| AC6.5 | ⏳ **team to check** | Keyboard-only run through |
+| AC6.6, AC6.6a | ✅ | No `.css` files in `src/`, no inline styles, no colour literals, every class is a GOV.UK Frontend class, no GOV.UK Frontend JavaScript imported |
+| AC6.6b | ✅ | Markup copied from the `govuk-frontend` 6.5.1 templates. Header and footer SVGs were extracted from the package by script, not retyped. |
+| AC6.6c | ✅ server / ⏳ browser | Fonts, crest, favicon and manifest all return 200 from the dev server. Browser Network tab check still to do. |
+| AC6.7, AC6.8 | ✅ | `journey.test.jsx` |
+| AC6.9 | ✅ | Accessibility statement filled in, with placeholders marked `[prototype: …]` |
+| AC6.10 | ✅ jsdom / ⏳ browser | axe-core scan of every page, error states and both result types: no serious or critical issues. Colour contrast can't be checked in jsdom, so a Lighthouse run in a browser is still to do. |
+| AC7.1, AC7.2 | ✅ | Every rule row in `intent.md` has a test named after it in `assessEligibility.test.js` |
+| AC8.1–AC8.6 | ✅ | `src/test/timeout.test.jsx` (fake timers) |
+| AC8.7 | ⏳ **team to check** | Screen reader check of the timeout warning |
+
+⏳ = needs a real browser. Claude couldn't open one here: headless Firefox (a snap package) won't start inside code-server. The planned Phase 6 manual check with shortened timings wasn't done for the same reason. The fake-timer tests cover the same behaviour.
+
+### Differences from the plan and spec
+
+1. **Answers cleared on arrival.** When the result or expired page is reached, stored answers are deleted straight away, but the in-memory copy is cleared only once the new page has loaded. React Router 7 applies navigation as a low-priority update, so clearing first let the old page's guard redirect to the first question. The tests caught this.
+2. **Focus moves to the new page's `<h1>`** after every page change, and the window scrolls to the top. The spec didn't say this. In a single-page app, screen reader users aren't told that a new page has loaded unless focus moves. Remove it if you'd rather not have it (the `useEffect` in `App.jsx` that runs on route change).
+3. **Back link sits above `<main>`**, where the GOV.UK page template puts it (`beforeContent`). `App.jsx` renders it from `backRoute`, rather than each page doing it.
+4. **Shared question page.** All 7 question pages use one `QuestionPage` component, with the fieldset markup in `QuestionFieldset`. Each page file only holds its wording and options.
+5. **`vite.config.js` has a `css.lightningcss.errorRecovery` setting.** GOV.UK Frontend's CSS has an old Internet Explorer hack that stops Vite's production build. This setting drops just those rules. The `server` block is unchanged.
+6. **Labels not fixed by the spec**, which you may want to review: "Own with a mortgage" (the spec value is `mortgage`); the check answers row names ("Previous Green Home Grants", "Own or rent", "Permission for the work", …); and the start page and result page body text.

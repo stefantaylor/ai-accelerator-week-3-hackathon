@@ -1,17 +1,17 @@
-// TODO: Import useNavigate from react-router-dom
+import QuestionPage from './QuestionPage';
+import { OWNERSHIP_OPTIONS } from '../content/labels';
 
-function OwnershipPage() {
-  // TODO: Read current value from form state
-  // TODO: Add validation and error handling
-  // TODO: On "Continue", save answer and navigate to /income
-
+function OwnershipPage(props) {
   return (
-    <>
-      <a href="/property-type" className="govuk-back-link">Back</a>
-      <h1 className="govuk-heading-l">Do you own or rent your property?</h1>
-      {/* TODO: Add radio buttons for: Own (with or without mortgage), Rent from a private landlord, Rent from a housing association, Rent from the council */}
-      {/* TODO: Add a Continue button */}
-    </>
+    <QuestionPage
+      {...props}
+      route="/ownership"
+      field="ownership"
+      control="radio"
+      question="Do you own or rent your property?"
+      options={OWNERSHIP_OPTIONS}
+      errorMessage="Select if you own or rent your property"
+    />
   );
 }
 

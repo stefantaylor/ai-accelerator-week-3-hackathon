@@ -1,17 +1,17 @@
-// TODO: Import useNavigate from react-router-dom
+import QuestionPage from './QuestionPage';
+import { INCOME_OPTIONS } from '../content/labels';
 
-function IncomePage() {
-  // TODO: Read current value from form state
-  // TODO: Add validation and error handling
-  // TODO: On "Continue", save answer and navigate to /insulation
-
+function IncomePage(props) {
   return (
-    <>
-      <a href="/ownership" className="govuk-back-link">Back</a>
-      <h1 className="govuk-heading-l">What is your annual household income?</h1>
-      {/* TODO: Add radio buttons for: Under 31,000, 31,000 to 50,000, Over 50,000 */}
-      {/* TODO: Add a Continue button */}
-    </>
+    <QuestionPage
+      {...props}
+      route="/income"
+      field="incomeBand"
+      control="radio"
+      question="What is your annual household income?"
+      options={INCOME_OPTIONS}
+      errorMessage="Select your annual household income"
+    />
   );
 }
 

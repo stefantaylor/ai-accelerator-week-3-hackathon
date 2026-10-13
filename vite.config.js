@@ -19,4 +19,14 @@ export default defineConfig({
       clientPort: 443,
     },
   },
+  // GOV.UK Frontend's CSS contains an old IE-only hack that LightningCSS
+  // rejects. errorRecovery drops just those rules.
+  css: {
+    lightningcss: { errorRecovery: true },
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.js'],
+    css: false,
+  },
 });

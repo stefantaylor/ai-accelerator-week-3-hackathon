@@ -1,17 +1,20 @@
-// TODO: Import useNavigate from react-router-dom
+import QuestionPage from './QuestionPage';
+import { UNINSULATED_PART_OPTIONS } from '../content/labels';
 
-function InsulationPage() {
-  // TODO: Read current value from form state
-  // TODO: Add validation and error handling
-  // TODO: On "Continue", save answer and navigate to /heating
-
+function InsulationPage(props) {
   return (
-    <>
-      <a href="/income" className="govuk-back-link">Back</a>
-      <h1 className="govuk-heading-l">Does your property have wall or loft insulation?</h1>
-      {/* TODO: Add radio buttons for: Yes - both wall and loft, Yes - wall only, Yes - loft only, No insulation, I do not know */}
-      {/* TODO: Add a Continue button */}
-    </>
+    <QuestionPage
+      {...props}
+      route="/insulation"
+      field="uninsulatedParts"
+      control="checkbox"
+      question="Which parts of your property are not insulated?"
+      hint="Select all that apply"
+      options={UNINSULATED_PART_OPTIONS}
+      exclusive={['allInsulated', 'notSure']}
+      dividerBefore="allInsulated"
+      errorMessage="Select which parts of your property are not insulated, or select 'All parts are insulated' or 'I'm not sure'"
+    />
   );
 }
 
