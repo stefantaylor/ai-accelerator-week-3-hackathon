@@ -36,6 +36,38 @@ function FooterLinks({ links }) {
   ));
 }
 
+const GOVUK = 'https://www.gov.uk';
+
+const servicesLinks = [
+  ['Benefits', '/browse/benefits'],
+  ['Births, death, marriages and care', '/browse/births-deaths-marriages'],
+  ['Business and self-employed', '/browse/business'],
+  ['Childcare and parenting', '/browse/childcare-parenting'],
+  ['Citizenship and living in the UK', '/browse/citizenship'],
+  ['Crime, justice and the law', '/browse/justice'],
+  ['Disabled people', '/browse/disabilities'],
+  ['Driving and transport', '/browse/driving'],
+  ['Education and learning', '/browse/education'],
+  ['Employing people', '/browse/employing-people'],
+  ['Environment and countryside', '/browse/environment-countryside'],
+  ['Housing and local services', '/browse/housing-local-services'],
+  ['Money and tax', '/browse/tax'],
+  ['Passports, travel and living abroad', '/browse/abroad'],
+  ['Visas and immigration', '/browse/visas-immigration'],
+  ['Working, jobs and pensions', '/browse/working'],
+];
+
+const governmentLinks = [
+  ['Departments', '/government/organisations'],
+  ['News', '/search/news-and-communications'],
+  ['Guidance and regulation', '/search/guidance-and-regulation'],
+  ['Research and statistics', '/search/research-and-statistics'],
+  ['Policy papers and consultations', '/search/policy-papers-and-consultations'],
+  ['Transparency', '/search/transparency-and-freedom-of-information-releases'],
+  ['How government works', '/government/how-government-works'],
+  ['Get involved', '/government/get-involved'],
+];
+
 export default function GovukFooter() {
   return (
     <footer className="govuk-footer" role="contentinfo">
@@ -80,21 +112,60 @@ export default function GovukFooter() {
 
         <hr className="govuk-footer__section-break" />
 
+        <div className="govuk-footer__navigation">
+          <div className="govuk-grid-column-two-thirds govuk-!-display-none-print">
+            <h2 className="govuk-footer__heading govuk-heading-m">Services and information</h2>
+            <ul className="govuk-footer__list govuk-footer__list--columns-2">
+              {servicesLinks.map(([text, path]) => (
+                <li key={path} className="govuk-footer__list-item">
+                  <a className="govuk-footer__link" href={`${GOVUK}${path}`}>{text}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="govuk-grid-column-one-third govuk-!-display-none-print">
+            <h2 className="govuk-footer__heading govuk-heading-m">Government activity</h2>
+            <ul className="govuk-footer__list govuk-footer__list--columns-1">
+              {governmentLinks.map(([text, path]) => (
+                <li key={path} className="govuk-footer__list-item">
+                  <a className="govuk-footer__link" href={`${GOVUK}${path}`}>{text}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <hr className="govuk-footer__section-break govuk-!-display-none-print" />
+
         <div className="govuk-footer__meta">
           <div className="govuk-footer__meta-item govuk-footer__meta-item--grow">
             <h2 className="govuk-visually-hidden">Support links</h2>
-            <ul className="govuk-footer__inline-list">
+            <ul className="govuk-footer__inline-list govuk-!-display-none-print">
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href="https://forms.office.com/e/j6J0LdRZNC">Contact Us</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/help`}>Help</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href="/cookies">Cookies</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/help/privacy-notice`}>Privacy</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href="/privacy-policy">Privacy Policy</a>
+                <a className="govuk-footer__link" href={`${GOVUK}/help/cookies`}>Cookies</a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href="/accessibility-statement">Accessibility Statement</a>
+                <a className="govuk-footer__link" href="/accessibility-statement">Accessibility statement</a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a className="govuk-footer__link" href={`${GOVUK}/contact`}>Contact</a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a className="govuk-footer__link" href={`${GOVUK}/help/terms-conditions`}>Terms and conditions</a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a className="govuk-footer__link" lang="cy" href={`${GOVUK}/cymraeg`}>Rhestr o Wasanaethau Cymraeg</a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a className="govuk-footer__link" href={`${GOVUK}/government/organisations/government-digital-service`}>
+                  Government Digital Service
+                </a>
               </li>
             </ul>
 
