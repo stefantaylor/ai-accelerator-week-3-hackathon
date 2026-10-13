@@ -1021,7 +1021,7 @@ a:focus {
   .govuk-radios__label,
   .govuk-checkboxes__label,
   .govuk-error-message { font-size: 16px; line-height: 1.25; }
-  .govuk-button { font-size: 16px; line-height: 1.1875; }
+  .govuk-button { width: 100%; font-size: 16px; line-height: 1.1875; text-align: center; }
   .govuk-button--start { font-size: 18px; }
   .govuk-body-l,
   .govuk-error-summary__title { font-size: 18px; line-height: 1.1111111111; }
