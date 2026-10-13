@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import os from 'node:os';
 
@@ -21,6 +22,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    exclude: [...configDefaults.exclude, 'tests/integration/**'],
     setupFiles: ['./src/__tests__/setup.js'],
   },
 });
